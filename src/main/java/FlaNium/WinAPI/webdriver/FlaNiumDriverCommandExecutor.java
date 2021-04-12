@@ -546,6 +546,23 @@ public class FlaNiumDriverCommandExecutor extends HttpCommandExecutor {
                 new CommandInfo("/session/:sessionId/element/:id/dateTimePicker/setDate/:dateTime", HttpMethod.POST));
         //endregion
 
+        //region Other
+        FLANIUM_COMMAND_NAME_TO_URL.put("customScreenshot",
+                new CommandInfo("/session/:sessionId/customScreenshot/:format", HttpMethod.POST));
+
+        FLANIUM_COMMAND_NAME_TO_URL.put("elementScreenshot",
+                new CommandInfo("/session/:sessionId/element/:id/elementScreenshot/:format", HttpMethod.POST));
+
+        FLANIUM_COMMAND_NAME_TO_URL.put("dragAndDrop",
+                new CommandInfo("/session/:sessionId/dragAndDrop", HttpMethod.POST));
+
+        FLANIUM_COMMAND_NAME_TO_URL.put("getActiveWindow",
+                new CommandInfo("/session/:sessionId/getActiveWindow", HttpMethod.POST));
+
+        FLANIUM_COMMAND_NAME_TO_URL.put("elementDragAndDrop",
+                new CommandInfo("/session/:sessionId/element/:id/elementDragAndDrop", HttpMethod.POST));
+        //endregion
+
     }
 
     public FlaNiumDriverCommandExecutor(FlaNiumDriverService driverService) {
