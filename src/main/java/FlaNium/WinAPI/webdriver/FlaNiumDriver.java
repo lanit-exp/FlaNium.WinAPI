@@ -21,6 +21,7 @@ public class FlaNiumDriver extends RemoteWebDriver {
     private static final String CUSTOM_SCREENSHOT = "customScreenshot";
     private static final String DRAG_AND_DROP = "dragAndDrop";
     private static final String GET_ACTIVE_WINDOW = "getActiveWindow";
+    private static final String SEND_CHARS_TO_ACTIVE_ELEMENT = "sendCharsToActiveElement";
 
     /**
      * Initializes a new instance of the {@link FlaNiumDriver} class using the specified options
@@ -203,4 +204,18 @@ public class FlaNiumDriver extends RemoteWebDriver {
            return null;
         }
     }
+
+
+    /**
+     * Simulate keystrokes. Send chars to active element.
+     * @param chars String of chars
+     */
+    public void sendChars(String chars) {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("value", chars);
+
+        this.execute(SEND_CHARS_TO_ACTIVE_ELEMENT, parameters);
+    }
+
+
 }

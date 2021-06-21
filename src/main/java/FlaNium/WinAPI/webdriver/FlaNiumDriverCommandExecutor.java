@@ -561,6 +561,9 @@ public class FlaNiumDriverCommandExecutor extends HttpCommandExecutor {
 
         FLANIUM_COMMAND_NAME_TO_URL.put("elementDragAndDrop",
                 new CommandInfo("/session/:sessionId/element/:id/elementDragAndDrop", HttpMethod.POST));
+
+        FLANIUM_COMMAND_NAME_TO_URL.put("sendCharsToActiveElement",
+                new CommandInfo("/session/:sessionId/sendCharsToActiveElement", HttpMethod.POST));
         //endregion
 
     }

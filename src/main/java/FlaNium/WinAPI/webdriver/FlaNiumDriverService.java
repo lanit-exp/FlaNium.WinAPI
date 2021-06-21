@@ -127,6 +127,7 @@ public class FlaNiumDriverService extends DriverService {
             }
 
             ImmutableList.Builder<String> argsBuidler = new ImmutableList.Builder<String>();
+
             if (silent) {
                 argsBuidler.add("--silent");
             }
@@ -136,6 +137,8 @@ public class FlaNiumDriverService extends DriverService {
             if (getLogFile() != null) {
                 argsBuidler.add(String.format("--log-path=%s", getLogFile().getAbsolutePath()));
             }
+
+            argsBuidler.add(String.format("--port=%d", getPort() == 0 ? DEFAULT_PORT : getPort()));
 
             return argsBuidler.build();
         }
