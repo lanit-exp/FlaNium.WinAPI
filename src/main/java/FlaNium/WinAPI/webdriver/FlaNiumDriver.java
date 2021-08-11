@@ -1,6 +1,8 @@
 package FlaNium.WinAPI.webdriver;
 
 import FlaNium.WinAPI.enums.ImageFormat;
+import FlaNium.WinAPI.enums.KeyCombination;
+import FlaNium.WinAPI.enums.KeyboardLayout;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
@@ -22,6 +24,11 @@ public class FlaNiumDriver extends RemoteWebDriver {
     private static final String DRAG_AND_DROP = "dragAndDrop";
     private static final String GET_ACTIVE_WINDOW = "getActiveWindow";
     private static final String SEND_CHARS_TO_ACTIVE_ELEMENT = "sendCharsToActiveElement";
+    private static final String GET_KEYBOARD_LAYOUT = "getKeyboardLayout";
+    private static final String SET_KEYBOARD_LAYOUT = "setKeyboardLayout";
+    private static final String GET_CLIPBOARD_TEXT = "getClipboardText";
+    private static final String KEY_COMBINATION = "keyCombination";
+
 
     /**
      * Initializes a new instance of the {@link FlaNiumDriver} class using the specified options
@@ -217,5 +224,64 @@ public class FlaNiumDriver extends RemoteWebDriver {
         this.execute(SEND_CHARS_TO_ACTIVE_ELEMENT, parameters);
     }
 
+
+    /**
+     * Set keyboard layout.
+     * @param keyboardLayout - hex string code of keyboard layout.
+     */
+    public void setKeyboardLayoutCode(String keyboardLayout) {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("value", keyboardLayout);
+
+        this.execute(SET_KEYBOARD_LAYOUT, parameters);
+    }
+
+
+    /**
+     * Get keyboard layout.
+     * @return - hex string code of keyboard layout.
+     */
+    public String getKeyboardLayoutCode() {
+        return this.execute(GET_KEYBOARD_LAYOUT).getValue().toString();
+    }
+
+
+    /**
+     * Set keyboard layout.
+     * @param keyboardLayout - {@link KeyboardLayout} instance of keyboard layout.
+     */
+    public void setKeyboardLayout(KeyboardLayout keyboardLayout) {
+        setKeyboardLayoutCode(keyboardLayout.getLayoutCode());
+    }
+
+
+    /**
+     * Get keyboard layout.
+     * @return - {@link KeyboardLayout} instance of keyboard layout.
+     */
+    public KeyboardLayout getKeyboardLayout() {
+        return KeyboardLayout.getKeyboardLayout(getKeyboardLayoutCode());
+    }
+
+
+    /**
+     * Get clipboard text.
+     * @return clipboard text string. Returned empty string if clipboard empty or contains no text.
+     */
+    public String getClipboardText(){
+        return this.execute(GET_CLIPBOARD_TEXT).getValue().toString();
+    }
+
+
+    /**
+     * Keystrokes of the selected combination.
+     * @param keyCombination {@link KeyCombination} instance of key combination.
+     */
+    public void performKeyCombination(KeyCombination keyCombination){
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("value", keyCombination.toString());
+
+        this.execute(KEY_COMBINATION, parameters);
+    }
 
 }

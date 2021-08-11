@@ -25,6 +25,8 @@ public class DesktopElement extends RemoteWebElement {
     private static final String WINDOW_GET_ACTIVE_WINDOW = "windowGetActiveWindow";
     private static final String ELEMENT_SCREENSHOT = "elementScreenshot";
     private static final String ELEMENT_DRAG_AND_DROP = "elementDragAndDrop";
+    private static final String ELEMENT_MOUSE_ACTION = "elementMouseAction";
+
 
     protected DesktopElement(WebElement element) {
         this.setParent(getRemoteWebDriver(element));
@@ -310,5 +312,83 @@ public class DesktopElement extends RemoteWebElement {
         parameters.put("basePoint", basePoint.toString());
 
         this.execute(ELEMENT_DRAG_AND_DROP, parameters);
+    }
+
+    /**
+     * Move the mouse to the point (Base point of element bounding rectangle + x, y coordinates).
+     *
+     * @param basePoint {@link BasePoint} of element bounding rectangle.
+     * @param x X Coordinate relative to base point of element bounding rectangle.
+     * @param y Y Coordinate relative to base point of element bounding rectangle.
+     */
+    public void mouseMove(BasePoint basePoint, int x, int y) {
+        HashMap<String, Object> parameters = new HashMap<String, Object>();
+
+        parameters.put("id", this.getId());
+        parameters.put("x", x);
+        parameters.put("y", y);
+        parameters.put("basePoint", basePoint.toString());
+        parameters.put("action", "move");
+
+        this.execute(ELEMENT_MOUSE_ACTION, parameters);
+    }
+
+    /**
+     * Click the mouse on the point (Base point of element bounding rectangle + x, y coordinates).
+     *
+     * @param basePoint {@link BasePoint} of element bounding rectangle.
+     * @param x X Coordinate relative to base point of element bounding rectangle.
+     * @param y Y Coordinate relative to base point of element bounding rectangle.
+     */
+    public void mouseClick(BasePoint basePoint, int x, int y) {
+        HashMap<String, Object> parameters = new HashMap<String, Object>();
+
+        parameters.put("id", this.getId());
+        parameters.put("x", x);
+        parameters.put("y", y);
+        parameters.put("basePoint", basePoint.toString());
+        parameters.put("action", "click");
+
+        this.execute(ELEMENT_MOUSE_ACTION, parameters);
+    }
+
+
+    /**
+     * Right click the mouse on the point (Base point of element bounding rectangle + x, y coordinates).
+     *
+     * @param basePoint {@link BasePoint} of element bounding rectangle.
+     * @param x X Coordinate relative to base point of element bounding rectangle.
+     * @param y Y Coordinate relative to base point of element bounding rectangle.
+     */
+    public void mouseRightClick(BasePoint basePoint, int x, int y) {
+        HashMap<String, Object> parameters = new HashMap<String, Object>();
+
+        parameters.put("id", this.getId());
+        parameters.put("x", x);
+        parameters.put("y", y);
+        parameters.put("basePoint", basePoint.toString());
+        parameters.put("action", "rightClick");
+
+        this.execute(ELEMENT_MOUSE_ACTION, parameters);
+    }
+
+
+    /**
+     * Double click the mouse on the point (Base point of element bounding rectangle + x, y coordinates).
+     *
+     * @param basePoint {@link BasePoint} of element bounding rectangle.
+     * @param x X Coordinate relative to base point of element bounding rectangle.
+     * @param y Y Coordinate relative to base point of element bounding rectangle.
+     */
+    public void mouseDoubleClick(BasePoint basePoint, int x, int y) {
+        HashMap<String, Object> parameters = new HashMap<String, Object>();
+
+        parameters.put("id", this.getId());
+        parameters.put("x", x);
+        parameters.put("y", y);
+        parameters.put("basePoint", basePoint.toString());
+        parameters.put("action", "doubleClick");
+
+        this.execute(ELEMENT_MOUSE_ACTION, parameters);
     }
 }

@@ -564,6 +564,22 @@ public class FlaNiumDriverCommandExecutor extends HttpCommandExecutor {
 
         FLANIUM_COMMAND_NAME_TO_URL.put("sendCharsToActiveElement",
                 new CommandInfo("/session/:sessionId/sendCharsToActiveElement", HttpMethod.POST));
+
+        FLANIUM_COMMAND_NAME_TO_URL.put("getKeyboardLayout",
+                new CommandInfo("/session/:sessionId/getKeyboardLayout", HttpMethod.POST));
+
+        FLANIUM_COMMAND_NAME_TO_URL.put("setKeyboardLayout",
+                new CommandInfo("/session/:sessionId/setKeyboardLayout", HttpMethod.POST));
+
+        FLANIUM_COMMAND_NAME_TO_URL.put("elementMouseAction",
+                new CommandInfo("/session/:sessionId/element/:id/elementMouseAction", HttpMethod.POST));
+
+        FLANIUM_COMMAND_NAME_TO_URL.put("getClipboardText",
+                new CommandInfo("/session/:sessionId/getClipboardText", HttpMethod.POST));
+
+        FLANIUM_COMMAND_NAME_TO_URL.put("keyCombination",
+                new CommandInfo("/session/:sessionId/keyCombination", HttpMethod.POST));
+
         //endregion
 
     }

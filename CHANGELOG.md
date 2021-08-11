@@ -1,5 +1,33 @@
 ## Changelog
 
+### 1.3.0 (2021-08-11)
+
+#### Breaking changes
+* None
+
+#### Enhancements
+* Added methods to the FlaNiumDriver class:
+  
+        setKeyboardLayoutCode
+        getKeyboardLayoutCode
+        setKeyboardLayout
+        getKeyboardLayout
+        getClipboardText
+        performKeyCombination
+
+* Added methods to the DesktopElement class:
+
+        mouseMove
+        mouseClick
+        mouseRightClick
+        mouseDoubleClick
+
+* Added CoordinateElement class.
+
+#### Bug fixes
+* None
+
+
 ### 1.2.0 (2021-06-21)
 
 #### Breaking changes
