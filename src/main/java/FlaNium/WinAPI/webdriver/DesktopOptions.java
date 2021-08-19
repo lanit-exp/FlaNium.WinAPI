@@ -13,6 +13,7 @@ public class DesktopOptions implements FlaNiumOptions {
     private static final String DEBUG_CONNECT_TO_RUNNING_APP_OPTION = "debugConnectToRunningApp";
     private static final String INNER_PORT_OPTION = "innerPort";
     private static final String LAUNCH_DELAY_OPTION = "launchDelay";
+    private static final String PROCESS_NAME_OPTION = "processName";
     private static final String INJECTION_ACTIVATE = "injectionActivate";
     private static final String APP_TYPE = "appType";
 
@@ -21,6 +22,7 @@ public class DesktopOptions implements FlaNiumOptions {
     private Boolean debugConnectToRunningApp;
     private Integer innerPort;
     private Integer launchDelay;
+    private String processName;
     private Boolean injectionActivate;
     private String appType;
 
@@ -67,6 +69,14 @@ public class DesktopOptions implements FlaNiumOptions {
     }
 
     /**
+     * Setting the name of the application process. It is used in cases when the process id changes after starting the application.
+     * @param processName process name of the main window of the application.
+     */
+    public void setProcessName(String processName) {
+        this.processName = processName;
+    }
+
+    /**
      * Using injection technology to access application data.
      * Need EXTENDED version of FlaNium Driver.
      * @param injectionActivate Activate injection technology
@@ -106,6 +116,10 @@ public class DesktopOptions implements FlaNiumOptions {
 
         if (launchDelay != null) {
             capabilityDictionary.put(LAUNCH_DELAY_OPTION, launchDelay);
+        }
+
+        if (processName != null) {
+            capabilityDictionary.put(PROCESS_NAME_OPTION, processName);
         }
 
         if (injectionActivate != null) {

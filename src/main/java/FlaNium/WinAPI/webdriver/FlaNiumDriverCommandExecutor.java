@@ -577,6 +577,9 @@ public class FlaNiumDriverCommandExecutor extends HttpCommandExecutor {
         FLANIUM_COMMAND_NAME_TO_URL.put("getClipboardText",
                 new CommandInfo("/session/:sessionId/getClipboardText", HttpMethod.POST));
 
+        FLANIUM_COMMAND_NAME_TO_URL.put("setClipboardText",
+                new CommandInfo("/session/:sessionId/setClipboardText", HttpMethod.POST));
+
         FLANIUM_COMMAND_NAME_TO_URL.put("keyCombination",
                 new CommandInfo("/session/:sessionId/keyCombination", HttpMethod.POST));
 

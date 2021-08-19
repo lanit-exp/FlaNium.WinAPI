@@ -27,6 +27,7 @@ public class FlaNiumDriver extends RemoteWebDriver {
     private static final String GET_KEYBOARD_LAYOUT = "getKeyboardLayout";
     private static final String SET_KEYBOARD_LAYOUT = "setKeyboardLayout";
     private static final String GET_CLIPBOARD_TEXT = "getClipboardText";
+    private static final String SET_CLIPBOARD_TEXT = "setClipboardText";
     private static final String KEY_COMBINATION = "keyCombination";
 
 
@@ -270,6 +271,18 @@ public class FlaNiumDriver extends RemoteWebDriver {
      */
     public String getClipboardText(){
         return this.execute(GET_CLIPBOARD_TEXT).getValue().toString();
+    }
+
+
+    /**
+     * Set clipboard text.
+     * @param text the text to be copied to the clipboard.
+     */
+    public void setClipboardText(String text){
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("value", text);
+
+        this.execute(SET_CLIPBOARD_TEXT, parameters);
     }
 
 

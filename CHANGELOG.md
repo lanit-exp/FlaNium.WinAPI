@@ -1,5 +1,18 @@
 ## Changelog
 
+### 1.4.0 (2021-08-19)
+
+#### Breaking changes
+* None
+
+#### Enhancements
+* Added setClipboardText method to the FlaNiumDriver class.
+* Added processName option to the DesktopOptions class.
+
+#### Bug fixes
+* None
+
+
 ### 1.3.0 (2021-08-11)
 
 #### Breaking changes
