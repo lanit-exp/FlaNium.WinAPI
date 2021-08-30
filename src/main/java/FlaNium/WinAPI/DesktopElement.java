@@ -225,13 +225,15 @@ public class DesktopElement extends RemoteWebElement {
      * Taking a screenshot of the current item.
      * @param outputType Return type BASE64, BYTES or FILE.
      * @param imageFormat  Image format: BMP, EMF, WMF, GIF, JPEG, PNG, TIFF, EXIF, ICON.
+     * @param foreground  If the parameter is set to false, it allows you to take a screenshot of an object that is not in the foreground.
      * @return Screenshot of the current item.
      * @throws WebDriverException
      */
-    public <X> X getScreenshot(OutputType<X> outputType, ImageFormat imageFormat) throws WebDriverException {
+    public <X> X getScreenshot(OutputType<X> outputType, ImageFormat imageFormat, boolean foreground) throws WebDriverException {
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("id", this.getId());
         parameters.put("format", imageFormat.toString());
+        parameters.put("foreground", foreground);
 
         Response response = this.execute(ELEMENT_SCREENSHOT,parameters);
 
@@ -254,7 +256,16 @@ public class DesktopElement extends RemoteWebElement {
      * @return Screenshot file of the current item.
      */
     public File getScreenshotFile(ImageFormat imageFormat){
-        return getScreenshot(OutputType.FILE,imageFormat);
+        return getScreenshot(OutputType.FILE, imageFormat, true);
+    }
+
+    /**
+     * Taking a screenshot of the not foreground current item.
+     * @param imageFormat Image format: BMP, EMF, WMF, GIF, JPEG, PNG, TIFF, EXIF, ICON.
+     * @return Screenshot file of the current item.
+     */
+    public File getScreenshotFileNotForeground(ImageFormat imageFormat){
+        return getScreenshot(OutputType.FILE, imageFormat, false);
     }
 
     /**
@@ -274,6 +285,22 @@ public class DesktopElement extends RemoteWebElement {
     }
 
     /**
+     * Taking a screenshot of the not foreground current item. Image format: PNG.
+     * @return Screenshot file of the current item.
+     */
+    public File getPngScreenshotFileNotForeground(){
+        return getScreenshotFileNotForeground(ImageFormat.PNG);
+    }
+
+    /**
+     * Taking a screenshot of the not foreground current item. Image format: JPEG.
+     * @return Screenshot file of the current item.
+     */
+    public File getJpegScreenshotFileNotForeground(){
+        return getScreenshotFileNotForeground(ImageFormat.JPEG);
+    }
+
+    /**
      * Taking a screenshot of the current item and save to file. Image format: PNG.
      * @param file File path.
      * @throws IOException
@@ -290,6 +317,25 @@ public class DesktopElement extends RemoteWebElement {
     public void saveJpegScreenshotFile(String file) throws IOException {
         FileUtils.copyFile(getJpegScreenshotFile(), new File(file));
     }
+
+    /**
+     * Taking a screenshot of the not foreground current item and save to file. Image format: PNG.
+     * @param file File path.
+     * @throws IOException
+     */
+    public void savePngScreenshotFileNotForeground(String file) throws IOException {
+        FileUtils.copyFile(getPngScreenshotFileNotForeground(), new File(file));
+    }
+
+    /**
+     * Taking a screenshot of the not foreground current item and save to file. Image format: JPEG.
+     * @param file File path.
+     * @throws IOException
+     */
+    public void saveJpegScreenshotFileNotForeground(String file) throws IOException {
+        FileUtils.copyFile(getJpegScreenshotFileNotForeground(), new File(file));
+    }
+
 
     /**
      * Drags and drops the mouse from the starting point (Base point of element bounding rectangle + x, y coordinates)

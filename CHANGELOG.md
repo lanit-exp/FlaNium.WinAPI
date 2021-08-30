@@ -1,5 +1,17 @@
 ## Changelog
 
+### 1.5.0 (2021-08-30)
+
+#### Breaking changes
+* None
+
+#### Enhancements
+* Added methods for saving a screenshot of elements that are not in the foreground (overlapped by other windows).
+
+#### Bug fixes
+* None
+
+
 ### 1.4.0 (2021-08-19)
 
 #### Breaking changes
