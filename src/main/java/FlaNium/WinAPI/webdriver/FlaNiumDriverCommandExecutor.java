@@ -583,6 +583,24 @@ public class FlaNiumDriverCommandExecutor extends HttpCommandExecutor {
         FLANIUM_COMMAND_NAME_TO_URL.put("keyCombination",
                 new CommandInfo("/session/:sessionId/keyCombination", HttpMethod.POST));
 
+        FLANIUM_COMMAND_NAME_TO_URL.put("touchActionsTap",
+                new CommandInfo("/session/:sessionId/touchActionsTap", HttpMethod.POST));
+
+        FLANIUM_COMMAND_NAME_TO_URL.put("touchActionsHold",
+                new CommandInfo("/session/:sessionId/touchActionsHold", HttpMethod.POST));
+
+        FLANIUM_COMMAND_NAME_TO_URL.put("touchActionsPinch",
+                new CommandInfo("/session/:sessionId/touchActionsPinch", HttpMethod.POST));
+
+        FLANIUM_COMMAND_NAME_TO_URL.put("touchActionsTransition",
+                new CommandInfo("/session/:sessionId/touchActionsTransition", HttpMethod.POST));
+
+        FLANIUM_COMMAND_NAME_TO_URL.put("touchActionsDrag",
+                new CommandInfo("/session/:sessionId/touchActionsDrag", HttpMethod.POST));
+
+        FLANIUM_COMMAND_NAME_TO_URL.put("touchActionsRotate",
+                new CommandInfo("/session/:sessionId/touchActionsRotate", HttpMethod.POST));
+
         //endregion
 
     }

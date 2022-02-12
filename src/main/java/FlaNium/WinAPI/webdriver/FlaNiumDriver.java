@@ -297,4 +297,8 @@ public class FlaNiumDriver extends RemoteWebDriver {
         this.execute(KEY_COMBINATION, parameters);
     }
 
+    @Override
+    public Response execute(String driverCommand, Map<String, ?> parameters) {
+        return super.execute(driverCommand, parameters);
+    }
 }

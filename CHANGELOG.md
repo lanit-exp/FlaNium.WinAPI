@@ -1,5 +1,18 @@
 ## Changelog
 
+### 1.6.0 (2022-02-12)
+
+#### Breaking changes
+* None
+
+#### Enhancements
+* Added responseTimeout parameter to DesktopOptions.
+* Added TouchActions : Drag, Hold, Pinch, Rotate, Tap, Transition.
+
+#### Bug fixes
+* None
+
+
 ### 1.5.0 (2021-08-30)
 
 #### Breaking changes

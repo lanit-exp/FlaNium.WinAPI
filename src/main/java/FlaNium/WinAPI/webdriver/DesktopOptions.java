@@ -16,6 +16,7 @@ public class DesktopOptions implements FlaNiumOptions {
     private static final String PROCESS_NAME_OPTION = "processName";
     private static final String INJECTION_ACTIVATE = "injectionActivate";
     private static final String APP_TYPE = "appType";
+    private static final String RESPONSE_TIMEOUT = "responseTimeout";
 
     private String applicationPath;
     private String arguments;
@@ -25,6 +26,7 @@ public class DesktopOptions implements FlaNiumOptions {
     private String processName;
     private Boolean injectionActivate;
     private String appType;
+    private Integer responseTimeout;
 
     /**
      * Sets the absolute local path to an .exe file to be started.
@@ -95,6 +97,16 @@ public class DesktopOptions implements FlaNiumOptions {
     }
 
     /**
+     * Setting the response timeout.
+     * If no response is received from the Win API within this time, an exception will be thrown.
+     * @param responseTimeout response timeout in milliseconds.
+     */
+    public void setResponseTimeout(Integer responseTimeout){
+        this.responseTimeout = responseTimeout;
+    }
+
+
+    /**
      * Convert options to DesiredCapabilities for FlaNium Desktop Driver
      * @return The DesiredCapabilities for FlaNium Desktop Driver with these options.
      */
@@ -128,6 +140,10 @@ public class DesktopOptions implements FlaNiumOptions {
 
         if (appType != null) {
             capabilityDictionary.put(APP_TYPE, appType);
+        }
+
+        if (responseTimeout != null) {
+            capabilityDictionary.put(RESPONSE_TIMEOUT, responseTimeout);
         }
 
         return new DesiredCapabilities(capabilityDictionary);
