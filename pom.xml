@@ -4,7 +4,7 @@
 
     <groupId>com.github.lanit-exp</groupId>
     <artifactId>FlaNium.WinAPI</artifactId>
-    <version>1.6.0</version>
+    <version>1.6.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>FlaNium.WinAPI</name>
