@@ -361,6 +361,31 @@ public class DesktopElement extends RemoteWebElement {
     }
 
     /**
+     * Drags and drops the mouse from the starting point (Base point of element bounding rectangle + x, y coordinates)
+     * with the given distance and within the specified time.
+     *
+     * @param basePoint {@link BasePoint} of element bounding rectangle.
+     * @param x X Coordinate relative to base point of element bounding rectangle.
+     * @param y Y Coordinate relative to base point of element bounding rectangle.
+     * @param dx The x distance to drag and drop, + for right, - for left.
+     * @param dy The y distance to drag and drop, + for down, - for up.
+     * @param duration Execution time in milliseconds.
+     */
+    public void smoothDragAndDrop(BasePoint basePoint, int x, int y, int dx, int dy, int duration) {
+        HashMap<String, Object> parameters = new HashMap<String, Object>();
+
+        parameters.put("id", this.getId());
+        parameters.put("x", x);
+        parameters.put("y", y);
+        parameters.put("dx", dx);
+        parameters.put("dy", dy);
+        parameters.put("basePoint", basePoint.toString());
+        parameters.put("duration", duration);
+
+        this.execute(ELEMENT_DRAG_AND_DROP, parameters);
+    }
+
+    /**
      * Move the mouse to the point (Base point of element bounding rectangle + x, y coordinates).
      *
      * @param basePoint {@link BasePoint} of element bounding rectangle.

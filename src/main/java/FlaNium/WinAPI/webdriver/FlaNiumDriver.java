@@ -185,6 +185,25 @@ public class FlaNiumDriver extends RemoteWebDriver {
     }
 
     /**
+     * Drags and drops the mouse from the starting point with the given distance within the specified time.
+     * @param x X coordinate of the start point.
+     * @param y Y coordinate of the start point.
+     * @param dx The x distance to drag and drop, + for right, - for left.
+     * @param dy The y distance to drag and drop, + for down, - for up.
+     * @param duration Execution time in milliseconds.
+     */
+    public void smoothDragAndDrop(int x, int y, int dx, int dy, int duration) {
+        HashMap<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("x", x);
+        parameters.put("y", y);
+        parameters.put("dx", dx);
+        parameters.put("dy", dy);
+        parameters.put("duration", duration);
+
+        this.execute(DRAG_AND_DROP, parameters);
+    }
+
+    /**
      * Get the active window.
      * @return The active window.
      */
