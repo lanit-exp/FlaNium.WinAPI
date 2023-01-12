@@ -20,6 +20,8 @@
     </developers>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
         <selenium.version>4.7.2</selenium.version>
 
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
