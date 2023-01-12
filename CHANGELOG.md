@@ -1,5 +1,16 @@
 ## Changelog
 
+### 2.0.0 (2023-01-12)
+
+#### Breaking changes
+* Change selenium library version to 4.7.2
+
+#### Enhancements
+* Added smoothDragAndDrop method.
+
+#### Bug fixes
+* None
+
 ### 1.6.0 (2022-02-12)
 
 #### Breaking changes
