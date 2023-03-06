@@ -1,13 +1,12 @@
 package FlaNium.WinAPI;
 
+import FlaNium.WinAPI.actions.TouchActions;
 import FlaNium.WinAPI.elements.Window;
 import FlaNium.WinAPI.enums.BasePoint;
 import FlaNium.WinAPI.enums.ImageFormat;
 import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.*;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.remote.Response;
@@ -28,7 +27,7 @@ public class DesktopElement extends RemoteWebElement {
     private static final String ELEMENT_MOUSE_ACTION = "elementMouseAction";
 
 
-    protected DesktopElement(WebElement element) {
+    public DesktopElement(WebElement element) {
         this.setParent(getRemoteWebDriver(element));
         this.setId(getId(element));
     }
@@ -462,4 +461,45 @@ public class DesktopElement extends RemoteWebElement {
 
         this.execute(ELEMENT_MOUSE_ACTION, parameters);
     }
+
+    /**
+     * Get Bounding Rectangle of element.
+     * @return Rectangle instance.
+     */
+    //todo Проверить
+    public Rectangle getElementRect() {
+        String rectString = this.getAttribute("BoundingRectangle");
+        String[] rect = rectString.split(",");
+        return new Rectangle(Integer.parseInt(rect[0].trim()), Integer.parseInt(rect[1].trim())
+                , Integer.parseInt(rect[3].trim()), Integer.parseInt(rect[2].trim()));
+    }
+
+
+    /**
+     * Cast DesktopElement to a Typed Element.
+     * @return WebElementExtensions instance.
+     */
+    public WebElementCast to(){
+        return new WebElementCast(this);
+    }
+
+    /**
+     * Cast DesktopElement to a Coordinate Element.
+     * @return WebElementExtensions instance.
+     */
+    //todo Проверить
+    public CoordinateElement toCoordinateElement(){
+        Rectangle rectangle = getElementRect();
+        return new CoordinateElement(this, BasePoint.TOP_LEFT, 0, 0, rectangle.getWidth(), rectangle.getHeight());
+    }
+
+    /**
+     * Get Touch Actions instance.
+     * @return Touch Actions instance.
+     */
+    //todo Проверить
+    public TouchActions touchActions(){
+        return new TouchActions(this);
+    }
+
 }
