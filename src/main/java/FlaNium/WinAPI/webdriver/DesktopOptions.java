@@ -3,6 +3,7 @@ import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class to manage options specific to {@link FlaNiumDriver}
@@ -33,16 +34,18 @@ public class DesktopOptions implements FlaNiumOptions {
      * This capability is not required if debugConnectToRunningApp is specified.
      * @param applicationPath Absolute local path to an .exe file to be started.
      */
-    public void setApplicationPath(String applicationPath) {
+    public DesktopOptions setApplicationPath(String applicationPath) {
         this.applicationPath = applicationPath;
+        return this;
     }
 
     /**
      * Sets startup argunments of the application under test.
      * @param arguments Startup argunments of the application under test.
      */
-    public void setArguments(String arguments) {
+    public DesktopOptions setArguments(String arguments) {
         this.arguments = arguments;
+        return this;
     }
 
     /**
@@ -50,32 +53,36 @@ public class DesktopOptions implements FlaNiumOptions {
      * If true, then application starting step are skipped.
      * @param debugConnectToRunningApp Value indicating whether debug connect to running app.
      */
-    public void setDebugConnectToRunningApp(Boolean debugConnectToRunningApp) {
+    public DesktopOptions setDebugConnectToRunningApp(Boolean debugConnectToRunningApp) {
         this.debugConnectToRunningApp = debugConnectToRunningApp;
+        return this;
     }
 
     /**
      * Sets the inner port.
      * @param innerPort inner port.
      */
-    public void setInnerPort(Integer innerPort) {
+    public DesktopOptions setInnerPort(Integer innerPort) {
         this.innerPort = innerPort;
+        return this;
     }
 
     /**
      * Sets the launch delay in milliseconds, to be waited to let visuals to initialize after application started.
      * @param launchDelay Launch delay in milliseconds
      */
-    public void setLaunchDelay(Integer launchDelay) {
+    public DesktopOptions setLaunchDelay(Integer launchDelay) {
         this.launchDelay = launchDelay;
+        return this;
     }
 
     /**
      * Setting the name of the application process. It is used in cases when the process id changes after starting the application.
      * @param processName process name of the main window of the application.
      */
-    public void setProcessName(String processName) {
+    public DesktopOptions setProcessName(String processName) {
         this.processName = processName;
+        return this;
     }
 
     /**
@@ -83,8 +90,9 @@ public class DesktopOptions implements FlaNiumOptions {
      * Need EXTENDED version of FlaNium Driver.
      * @param injectionActivate Activate injection technology
      */
-    public void setInjectionActivate(Boolean injectionActivate){
+    public DesktopOptions setInjectionActivate(Boolean injectionActivate){
         this.injectionActivate = injectionActivate;
+        return this;
     }
 
     /**
@@ -92,8 +100,9 @@ public class DesktopOptions implements FlaNiumOptions {
      * Need EXTENDED version of FlaNium Driver.
      * @param appType Type of application.
      */
-    public void setAppType(AppType appType){
+    public DesktopOptions setAppType(AppType appType){
         this.appType = appType.toString();
+        return this;
     }
 
     /**
@@ -101,8 +110,9 @@ public class DesktopOptions implements FlaNiumOptions {
      * If no response is received from the Win API within this time, an exception will be thrown.
      * @param responseTimeout response timeout in milliseconds.
      */
-    public void setResponseTimeout(Integer responseTimeout){
+    public DesktopOptions setResponseTimeout(Integer responseTimeout){
         this.responseTimeout = responseTimeout;
+        return this;
     }
 
 
@@ -110,8 +120,9 @@ public class DesktopOptions implements FlaNiumOptions {
      * Convert options to DesiredCapabilities for FlaNium Desktop Driver
      * @return The DesiredCapabilities for FlaNium Desktop Driver with these options.
      */
+    @Override
     public Capabilities toCapabilities() {
-        HashMap<String, Object> capabilityDictionary = new HashMap<String, Object>();
+        Map<String, Object> capabilityDictionary = new HashMap<>();
         capabilityDictionary.put(APPLICATION_PATH_OPTION, applicationPath);
 
         if ((arguments != null) && (arguments.length() > 0)) {
