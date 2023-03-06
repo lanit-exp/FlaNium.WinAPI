@@ -1,5 +1,6 @@
 package FlaNium.WinAPI.webdriver;
 
+import FlaNium.WinAPI.actions.TouchActions;
 import FlaNium.WinAPI.enums.ImageFormat;
 import FlaNium.WinAPI.enums.KeyCombination;
 import FlaNium.WinAPI.enums.KeyboardLayout;
@@ -30,15 +31,6 @@ public class FlaNiumDriver extends RemoteWebDriver {
     private static final String SET_CLIPBOARD_TEXT = "setClipboardText";
     private static final String KEY_COMBINATION = "keyCombination";
 
-
-    /**
-     * Initializes a new instance of the {@link FlaNiumDriver} class using the specified options
-     *
-     * @param options Thre {@link FlaNiumOptions} to be used with the FlaNium driver.
-     */
-    public FlaNiumDriver(FlaNiumOptions options) {
-        this(createDefaultService(options.getClass()), options);
-    }
 
     /**
      * Initializes a new instance of the {@link FlaNiumDriver} class using the specified {@link FlaNiumDriverService}
@@ -82,14 +74,6 @@ public class FlaNiumDriver extends RemoteWebDriver {
         super(new FlaNiumDriverCommandExecutor(remoteAddress), dc);
     }
 
-
-    private static FlaNiumDriverService createDefaultService(Class<? extends FlaNiumOptions> optionsType) {
-        if (optionsType == DesktopOptions.class)
-            return FlaNiumDriverService.createDesktopService();
-
-        throw new IllegalArgumentException(
-                "Option type must be type of DesktopOptions");
-    }
 
     /**
      * Taking a screenshot of the entire screen.
@@ -319,5 +303,14 @@ public class FlaNiumDriver extends RemoteWebDriver {
     @Override
     public Response execute(String driverCommand, Map<String, ?> parameters) {
         return super.execute(driverCommand, parameters);
+    }
+
+
+    /**
+     * Get Touch Actions instance.
+     * @return Touch Actions instance.
+     */
+    public TouchActions touchActions(){
+        return new TouchActions(this);
     }
 }
