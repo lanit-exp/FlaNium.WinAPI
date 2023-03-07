@@ -1,27 +1,22 @@
 package FlaNium.WinAPI.webdriver;
 
+import FlaNium.WinAPI.actions.ScreenshotActions;
 import FlaNium.WinAPI.actions.TouchActions;
-import FlaNium.WinAPI.enums.ImageFormat;
 import FlaNium.WinAPI.enums.KeyCombination;
 import FlaNium.WinAPI.enums.KeyboardLayout;
-import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.remote.Response;
 
-import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 public class FlaNiumDriver extends RemoteWebDriver {
 
-    private static final String CUSTOM_SCREENSHOT = "customScreenshot";
+
     private static final String DRAG_AND_DROP = "dragAndDrop";
     private static final String GET_ACTIVE_WINDOW = "getActiveWindow";
     private static final String SEND_CHARS_TO_ACTIVE_ELEMENT = "sendCharsToActiveElement";
@@ -74,82 +69,6 @@ public class FlaNiumDriver extends RemoteWebDriver {
         super(new FlaNiumDriverCommandExecutor(remoteAddress), dc);
     }
 
-
-    /**
-     * Taking a screenshot of the entire screen.
-     *
-     * @param outputType  Return type BASE64, BYTES or FILE.
-     * @param imageFormat Image format: BMP, EMF, WMF, GIF, JPEG, PNG, TIFF, EXIF, ICON.
-     * @return Screenshot of the entire screen.
-     * @throws WebDriverException
-     */
-    public <X> X getScreenshot(OutputType<X> outputType, ImageFormat imageFormat) throws WebDriverException {
-
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("format", imageFormat.toString());
-
-        Response response = this.execute(CUSTOM_SCREENSHOT, parameters);
-
-        Object result = response.getValue();
-        String base64EncodedPng;
-        if (result instanceof String) {
-            base64EncodedPng = (String) result;
-            return outputType.convertFromBase64Png(base64EncodedPng);
-        } else if (result instanceof byte[]) {
-            base64EncodedPng = new String((byte[]) ((byte[]) result));
-            return outputType.convertFromBase64Png(base64EncodedPng);
-        } else {
-            throw new RuntimeException(String.format("Unexpected result for %s command: %s", "screenshot", result == null ? "null" : result.getClass().getName() + " instance"));
-        }
-    }
-
-    /**
-     * Taking a screenshot of the entire screen.
-     *
-     * @param imageFormat Image format: BMP, EMF, WMF, GIF, JPEG, PNG, TIFF, EXIF, ICON.
-     * @return Full Screen Screenshot File.
-     */
-    public File getScreenshotFile(ImageFormat imageFormat) {
-        return getScreenshot(OutputType.FILE, imageFormat);
-    }
-
-    /**
-     * Taking a screenshot of the entire screen. Image format: PNG.
-     *
-     * @return Full Screen Screenshot File.
-     */
-    public File getPngScreenshotFile() {
-        return getScreenshotFile(ImageFormat.PNG);
-    }
-
-    /**
-     * Taking a screenshot of the entire screen. Image format: JPEG.
-     *
-     * @return Full Screen Screenshot File.
-     */
-    public File getJpegScreenshotFile() {
-        return getScreenshotFile(ImageFormat.JPEG);
-    }
-
-    /**
-     * Taking a screenshot of the entire screen and save to file. Image format: PNG.
-     *
-     * @param file File path.
-     * @throws IOException
-     */
-    public void savePngScreenshotFile(String file) throws IOException {
-        FileUtils.copyFile(getPngScreenshotFile(), new File(file));
-    }
-
-    /**
-     * Taking a screenshot of the entire screen and save to file. Image format: JPEG.
-     *
-     * @param file File path.
-     * @throws IOException
-     */
-    public void saveJpegScreenshotFile(String file) throws IOException {
-        FileUtils.copyFile(getJpegScreenshotFile(), new File(file));
-    }
 
     /**
      * Drags and drops the mouse from the starting point with the given distance.
@@ -312,5 +231,13 @@ public class FlaNiumDriver extends RemoteWebDriver {
      */
     public TouchActions touchActions(){
         return new TouchActions(this);
+    }
+
+    /**
+     * Get Screenshot Actions of current item.
+     * @return ScreenshotActions instance.
+     */
+    public ScreenshotActions screenshotActions(){
+        return new ScreenshotActions(this);
     }
 }

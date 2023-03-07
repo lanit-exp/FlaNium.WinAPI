@@ -1,18 +1,17 @@
 package FlaNium.WinAPI;
 
+import FlaNium.WinAPI.actions.ScreenshotActions;
 import FlaNium.WinAPI.actions.TouchActions;
 import FlaNium.WinAPI.elements.Window;
 import FlaNium.WinAPI.enums.BasePoint;
-import FlaNium.WinAPI.enums.ImageFormat;
-import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.*;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.Rectangle;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.remote.Response;
 
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
@@ -22,7 +21,7 @@ import java.util.*;
 public class DesktopElement extends RemoteWebElement {
 
     private static final String WINDOW_GET_ACTIVE_WINDOW = "windowGetActiveWindow";
-    private static final String ELEMENT_SCREENSHOT = "elementScreenshot";
+
     private static final String ELEMENT_DRAG_AND_DROP = "elementDragAndDrop";
     private static final String ELEMENT_MOUSE_ACTION = "elementMouseAction";
 
@@ -220,120 +219,7 @@ public class DesktopElement extends RemoteWebElement {
     }
     //endregion
 
-    /**
-     * Taking a screenshot of the current item.
-     * @param outputType Return type BASE64, BYTES or FILE.
-     * @param imageFormat  Image format: BMP, EMF, WMF, GIF, JPEG, PNG, TIFF, EXIF, ICON.
-     * @param foreground  If the parameter is set to false, it allows you to take a screenshot of an object that is not in the foreground.
-     * @return Screenshot of the current item.
-     * @throws WebDriverException
-     */
-    public <X> X getScreenshot(OutputType<X> outputType, ImageFormat imageFormat, boolean foreground) throws WebDriverException {
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("id", this.getId());
-        parameters.put("format", imageFormat.toString());
-        parameters.put("foreground", foreground);
 
-        Response response = this.execute(ELEMENT_SCREENSHOT,parameters);
-
-        Object result = response.getValue();
-        String base64EncodedPng;
-        if (result instanceof String) {
-            base64EncodedPng = (String)result;
-            return outputType.convertFromBase64Png(base64EncodedPng);
-        } else if (result instanceof byte[]) {
-            base64EncodedPng = new String((byte[])((byte[])result));
-            return outputType.convertFromBase64Png(base64EncodedPng);
-        } else {
-            throw new RuntimeException(String.format("Unexpected result for %s command: %s", "screenshot", result == null ? "null" : result.getClass().getName() + " instance"));
-        }
-    }
-
-    /**
-     * Taking a screenshot of the current item.
-     * @param imageFormat Image format: BMP, EMF, WMF, GIF, JPEG, PNG, TIFF, EXIF, ICON.
-     * @return Screenshot file of the current item.
-     */
-    public File getScreenshotFile(ImageFormat imageFormat){
-        return getScreenshot(OutputType.FILE, imageFormat, true);
-    }
-
-    /**
-     * Taking a screenshot of the not foreground current item.
-     * @param imageFormat Image format: BMP, EMF, WMF, GIF, JPEG, PNG, TIFF, EXIF, ICON.
-     * @return Screenshot file of the current item.
-     */
-    public File getScreenshotFileNotForeground(ImageFormat imageFormat){
-        return getScreenshot(OutputType.FILE, imageFormat, false);
-    }
-
-    /**
-     * Taking a screenshot of the current item. Image format: PNG.
-     * @return Screenshot file of the current item.
-     */
-    public File getPngScreenshotFile(){
-        return getScreenshotFile(ImageFormat.PNG);
-    }
-
-    /**
-     * Taking a screenshot of the current item. Image format: JPEG.
-     * @return Screenshot file of the current item.
-     */
-    public File getJpegScreenshotFile(){
-        return getScreenshotFile(ImageFormat.JPEG);
-    }
-
-    /**
-     * Taking a screenshot of the not foreground current item. Image format: PNG.
-     * @return Screenshot file of the current item.
-     */
-    public File getPngScreenshotFileNotForeground(){
-        return getScreenshotFileNotForeground(ImageFormat.PNG);
-    }
-
-    /**
-     * Taking a screenshot of the not foreground current item. Image format: JPEG.
-     * @return Screenshot file of the current item.
-     */
-    public File getJpegScreenshotFileNotForeground(){
-        return getScreenshotFileNotForeground(ImageFormat.JPEG);
-    }
-
-    /**
-     * Taking a screenshot of the current item and save to file. Image format: PNG.
-     * @param file File path.
-     * @throws IOException
-     */
-    public void savePngScreenshotFile(String file) throws IOException {
-        FileUtils.copyFile(getPngScreenshotFile(), new File(file));
-    }
-
-    /**
-     * Taking a screenshot of the current item and save to file. Image format: JPEG.
-     * @param file File path.
-     * @throws IOException
-     */
-    public void saveJpegScreenshotFile(String file) throws IOException {
-        FileUtils.copyFile(getJpegScreenshotFile(), new File(file));
-    }
-
-    /**
-     * Taking a screenshot of the not foreground current item and save to file. Image format: PNG.
-     * @param file File path.
-     * @throws IOException
-     */
-    public void savePngScreenshotFileNotForeground(String file) throws IOException {
-        FileUtils.copyFile(getPngScreenshotFileNotForeground(), new File(file));
-    }
-
-    /**
-     * Taking a screenshot of the not foreground current item and save to file. Image format: JPEG.
-     * @param file File path.
-     * @throws IOException
-     */
-    public void saveJpegScreenshotFileNotForeground(String file) throws IOException {
-        FileUtils.copyFile(getJpegScreenshotFileNotForeground(), new File(file));
-    }
 
 
     /**
@@ -500,6 +386,14 @@ public class DesktopElement extends RemoteWebElement {
     //todo Проверить
     public TouchActions touchActions(){
         return new TouchActions(this);
+    }
+
+    /**
+     * Get Screenshot Actions of current item.
+     * @return ScreenshotActions instance.
+     */
+    public ScreenshotActions screenshotActions(){
+        return new ScreenshotActions(this);
     }
 
 }
