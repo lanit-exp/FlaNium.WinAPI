@@ -12,7 +12,6 @@ public class DesktopOptions implements FlaNiumOptions {
     private static final String APPLICATION_PATH_OPTION = "app";
     private static final String ARGUMENTS_OPTION = "args";
     private static final String DEBUG_CONNECT_TO_RUNNING_APP_OPTION = "debugConnectToRunningApp";
-    private static final String INNER_PORT_OPTION = "innerPort";
     private static final String LAUNCH_DELAY_OPTION = "launchDelay";
     private static final String PROCESS_NAME_OPTION = "processName";
     private static final String INJECTION_ACTIVATE = "injectionActivate";
@@ -22,12 +21,12 @@ public class DesktopOptions implements FlaNiumOptions {
     private String applicationPath;
     private String arguments;
     private Boolean debugConnectToRunningApp;
-    private Integer innerPort;
     private Integer launchDelay;
     private String processName;
     private Boolean injectionActivate;
     private String appType;
     private Integer responseTimeout;
+
 
     /**
      * Sets the absolute local path to an .exe file to be started.
@@ -55,15 +54,6 @@ public class DesktopOptions implements FlaNiumOptions {
      */
     public DesktopOptions setDebugConnectToRunningApp(Boolean debugConnectToRunningApp) {
         this.debugConnectToRunningApp = debugConnectToRunningApp;
-        return this;
-    }
-
-    /**
-     * Sets the inner port.
-     * @param innerPort inner port.
-     */
-    public DesktopOptions setInnerPort(Integer innerPort) {
-        this.innerPort = innerPort;
         return this;
     }
 
@@ -131,10 +121,6 @@ public class DesktopOptions implements FlaNiumOptions {
 
         if (debugConnectToRunningApp != null) {
             capabilityDictionary.put(DEBUG_CONNECT_TO_RUNNING_APP_OPTION, debugConnectToRunningApp);
-        }
-
-        if (innerPort != null) {
-            capabilityDictionary.put(INNER_PORT_OPTION, innerPort);
         }
 
         if (launchDelay != null) {
