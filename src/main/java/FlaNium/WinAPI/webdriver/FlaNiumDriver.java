@@ -1,9 +1,8 @@
 package FlaNium.WinAPI.webdriver;
 
+import FlaNium.WinAPI.actions.KeyboardActions;
 import FlaNium.WinAPI.actions.ScreenshotActions;
 import FlaNium.WinAPI.actions.TouchActions;
-import FlaNium.WinAPI.enums.KeyCombination;
-import FlaNium.WinAPI.enums.KeyboardLayout;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -19,12 +18,6 @@ public class FlaNiumDriver extends RemoteWebDriver {
 
     private static final String DRAG_AND_DROP = "dragAndDrop";
     private static final String GET_ACTIVE_WINDOW = "getActiveWindow";
-    private static final String SEND_CHARS_TO_ACTIVE_ELEMENT = "sendCharsToActiveElement";
-    private static final String GET_KEYBOARD_LAYOUT = "getKeyboardLayout";
-    private static final String SET_KEYBOARD_LAYOUT = "setKeyboardLayout";
-    private static final String GET_CLIPBOARD_TEXT = "getClipboardText";
-    private static final String SET_CLIPBOARD_TEXT = "setClipboardText";
-    private static final String KEY_COMBINATION = "keyCombination";
 
 
     /**
@@ -72,8 +65,9 @@ public class FlaNiumDriver extends RemoteWebDriver {
 
     /**
      * Drags and drops the mouse from the starting point with the given distance.
-     * @param x X coordinate of the start point.
-     * @param y Y coordinate of the start point.
+     *
+     * @param x  X coordinate of the start point.
+     * @param y  Y coordinate of the start point.
      * @param dx The x distance to drag and drop, + for right, - for left.
      * @param dy The y distance to drag and drop, + for down, - for up.
      */
@@ -89,10 +83,11 @@ public class FlaNiumDriver extends RemoteWebDriver {
 
     /**
      * Drags and drops the mouse from the starting point with the given distance within the specified time.
-     * @param x X coordinate of the start point.
-     * @param y Y coordinate of the start point.
-     * @param dx The x distance to drag and drop, + for right, - for left.
-     * @param dy The y distance to drag and drop, + for down, - for up.
+     *
+     * @param x        X coordinate of the start point.
+     * @param y        Y coordinate of the start point.
+     * @param dx       The x distance to drag and drop, + for right, - for left.
+     * @param dy       The y distance to drag and drop, + for down, - for up.
      * @param duration Execution time in milliseconds.
      */
     public void smoothDragAndDrop(int x, int y, int dx, int dy, int duration) {
@@ -108,11 +103,12 @@ public class FlaNiumDriver extends RemoteWebDriver {
 
     /**
      * Get the active window.
+     *
      * @return The active window.
      */
-    public RemoteWebElement getActiveWindow(){
+    public RemoteWebElement getActiveWindow() {
         try {
-            Response  response = this.execute(GET_ACTIVE_WINDOW);
+            Response response = this.execute(GET_ACTIVE_WINDOW);
 
             Object value = response.getValue();
 
@@ -131,92 +127,8 @@ public class FlaNiumDriver extends RemoteWebDriver {
             return result;
 
         } catch (NoSuchElementException e) {
-           return null;
+            return null;
         }
-    }
-
-
-    /**
-     * Simulate keystrokes. Send chars to active element.
-     * @param chars String of chars
-     */
-    public void sendChars(String chars) {
-        HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put("value", chars);
-
-        this.execute(SEND_CHARS_TO_ACTIVE_ELEMENT, parameters);
-    }
-
-
-    /**
-     * Set keyboard layout.
-     * @param keyboardLayout - hex string code of keyboard layout.
-     */
-    public void setKeyboardLayoutCode(String keyboardLayout) {
-        HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put("value", keyboardLayout);
-
-        this.execute(SET_KEYBOARD_LAYOUT, parameters);
-    }
-
-
-    /**
-     * Get keyboard layout.
-     * @return - hex string code of keyboard layout.
-     */
-    public String getKeyboardLayoutCode() {
-        return this.execute(GET_KEYBOARD_LAYOUT).getValue().toString();
-    }
-
-
-    /**
-     * Set keyboard layout.
-     * @param keyboardLayout - {@link KeyboardLayout} instance of keyboard layout.
-     */
-    public void setKeyboardLayout(KeyboardLayout keyboardLayout) {
-        setKeyboardLayoutCode(keyboardLayout.getLayoutCode());
-    }
-
-
-    /**
-     * Get keyboard layout.
-     * @return - {@link KeyboardLayout} instance of keyboard layout.
-     */
-    public KeyboardLayout getKeyboardLayout() {
-        return KeyboardLayout.getKeyboardLayout(getKeyboardLayoutCode());
-    }
-
-
-    /**
-     * Get clipboard text.
-     * @return clipboard text string. Returned empty string if clipboard empty or contains no text.
-     */
-    public String getClipboardText(){
-        return this.execute(GET_CLIPBOARD_TEXT).getValue().toString();
-    }
-
-
-    /**
-     * Set clipboard text.
-     * @param text the text to be copied to the clipboard.
-     */
-    public void setClipboardText(String text){
-        HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put("value", text);
-
-        this.execute(SET_CLIPBOARD_TEXT, parameters);
-    }
-
-
-    /**
-     * Keystrokes of the selected combination.
-     * @param keyCombination {@link KeyCombination} instance of key combination.
-     */
-    public void performKeyCombination(KeyCombination keyCombination){
-        HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put("value", keyCombination.toString());
-
-        this.execute(KEY_COMBINATION, parameters);
     }
 
     @Override
@@ -224,20 +136,36 @@ public class FlaNiumDriver extends RemoteWebDriver {
         return super.execute(driverCommand, parameters);
     }
 
+    @Override
+    public Response execute(String command) {
+        return super.execute(command);
+    }
 
     /**
      * Get Touch Actions instance.
+     *
      * @return Touch Actions instance.
      */
-    public TouchActions touchActions(){
+    public TouchActions touchActions() {
         return new TouchActions(this);
     }
 
     /**
+     * Get Keyboard Actions instance.
+     *
+     * @return Keyboard Actions instance.
+     */
+    public KeyboardActions keyboardActions() {
+        return new KeyboardActions(this);
+    }
+
+
+    /**
      * Get Screenshot Actions of current item.
+     *
      * @return ScreenshotActions instance.
      */
-    public ScreenshotActions screenshotActions(){
+    public ScreenshotActions screenshotActions() {
         return new ScreenshotActions(this);
     }
 }

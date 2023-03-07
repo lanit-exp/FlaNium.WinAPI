@@ -20,6 +20,13 @@ public class TouchActions {
         this.y = 0;
     }
 
+    public TouchActions(DesktopElement desktopElement, int x, int y) {
+        this.driver = (FlaNiumDriver) desktopElement.getWrappedDriver();
+        Rectangle rectangle = desktopElement.getElementRect();
+        this.x = rectangle.getX() + x;
+        this.y = rectangle.getY() + y;
+    }
+
     //todo Проверить
     public TouchActions(DesktopElement desktopElement) {
         this.driver = (FlaNiumDriver) desktopElement.getWrappedDriver();
@@ -93,7 +100,7 @@ public class TouchActions {
     /**
      * Performs a touch-drag from the start point to the end point.
      *
-     * @param duration   The duration of the action (in milliseconds).
+     * @param duration       The duration of the action (in milliseconds).
      * @param startEndPoints The list of start/end point tuples.
      * @param durationHold   The duration of the hold on start points (in milliseconds).
      */
@@ -173,18 +180,18 @@ public class TouchActions {
     }
 
 
-    private Point offsetPoint(Point point){
+    private Point offsetPoint(Point point) {
         return new Point(point.getX() + x, point.getY() + y);
     }
 
-    private Point[] offsetPoints(Point[] points){
-       return Arrays.stream(points).map(this::offsetPoint).toArray(Point[]::new);
+    private Point[] offsetPoints(Point[] points) {
+        return Arrays.stream(points).map(this::offsetPoint).toArray(Point[]::new);
     }
 
-    private StartEndPoint[] offsetStartAndPoints(StartEndPoint[] points){
+    private StartEndPoint[] offsetStartAndPoints(StartEndPoint[] points) {
         return Arrays.stream(points)
                 .map(startEndPoint -> new StartEndPoint(offsetPoint(startEndPoint.getStartPoint()), offsetPoint(startEndPoint.getEndPoint())))
-                        .toArray(StartEndPoint[]::new);
+                .toArray(StartEndPoint[]::new);
     }
 
 }

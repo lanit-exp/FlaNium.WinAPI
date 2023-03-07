@@ -1,5 +1,6 @@
 package FlaNium.WinAPI;
 
+import FlaNium.WinAPI.actions.MouseActions;
 import FlaNium.WinAPI.actions.ScreenshotActions;
 import FlaNium.WinAPI.actions.TouchActions;
 import FlaNium.WinAPI.elements.Window;
@@ -21,9 +22,6 @@ import java.util.*;
 public class DesktopElement extends RemoteWebElement {
 
     private static final String WINDOW_GET_ACTIVE_WINDOW = "windowGetActiveWindow";
-
-    private static final String ELEMENT_DRAG_AND_DROP = "elementDragAndDrop";
-    private static final String ELEMENT_MOUSE_ACTION = "elementMouseAction";
 
 
     public DesktopElement(WebElement element) {
@@ -122,6 +120,11 @@ public class DesktopElement extends RemoteWebElement {
         return response;
     }
 
+    @Override
+    public Response execute(String command, Map<String, ?> parameters) {
+        return super.execute(command, parameters);
+    }
+
     //region Call Command
     protected Response callVoidCommand(String command) {
         HashMap<String, Object> parameters = new HashMap<String, Object>();
@@ -180,6 +183,7 @@ public class DesktopElement extends RemoteWebElement {
 
     /**
      * Getting the "Name" attribute of an element.
+     *
      * @return The "Name" attribute of the current element.
      */
     public String getName() {
@@ -188,12 +192,27 @@ public class DesktopElement extends RemoteWebElement {
 
     /**
      * Get the active window.
+     *
      * @return The active window.
      */
     public Window getActiveWindow() {
         Response response = callVoidCommand(WINDOW_GET_ACTIVE_WINDOW);
         return new Window(createRemoteWebElementFromResponse(response));
     }
+
+    /**
+     * Get Bounding Rectangle of element.
+     *
+     * @return Rectangle instance.
+     */
+    //todo Проверить
+    public Rectangle getElementRect() {
+        String rectString = this.getAttribute("BoundingRectangle");
+        String[] rect = rectString.split(",");
+        return new Rectangle(Integer.parseInt(rect[0].trim()), Integer.parseInt(rect[1].trim())
+                , Integer.parseInt(rect[3].trim()), Integer.parseInt(rect[2].trim()));
+    }
+
     //endregion
 
     //region Parse
@@ -220,180 +239,61 @@ public class DesktopElement extends RemoteWebElement {
     //endregion
 
 
-
+    //region Actions
 
     /**
-     * Drags and drops the mouse from the starting point (Base point of element bounding rectangle + x, y coordinates)
-     * with the given distance.
+     * Get Mouse Actions instance.
      *
-     * @param basePoint {@link BasePoint} of element bounding rectangle.
-     * @param x X Coordinate relative to base point of element bounding rectangle.
-     * @param y Y Coordinate relative to base point of element bounding rectangle.
-     * @param dx The x distance to drag and drop, + for right, - for left.
-     * @param dy The y distance to drag and drop, + for down, - for up.
+     * @return MouseActions instance.
      */
-    public void dragAndDrop(BasePoint basePoint, int x, int y, int dx, int dy) {
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
-
-        parameters.put("id", this.getId());
-        parameters.put("x", x);
-        parameters.put("y", y);
-        parameters.put("dx", dx);
-        parameters.put("dy", dy);
-        parameters.put("basePoint", basePoint.toString());
-
-        this.execute(ELEMENT_DRAG_AND_DROP, parameters);
-    }
-
-    /**
-     * Drags and drops the mouse from the starting point (Base point of element bounding rectangle + x, y coordinates)
-     * with the given distance and within the specified time.
-     *
-     * @param basePoint {@link BasePoint} of element bounding rectangle.
-     * @param x X Coordinate relative to base point of element bounding rectangle.
-     * @param y Y Coordinate relative to base point of element bounding rectangle.
-     * @param dx The x distance to drag and drop, + for right, - for left.
-     * @param dy The y distance to drag and drop, + for down, - for up.
-     * @param duration Execution time in milliseconds.
-     */
-    public void smoothDragAndDrop(BasePoint basePoint, int x, int y, int dx, int dy, int duration) {
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
-
-        parameters.put("id", this.getId());
-        parameters.put("x", x);
-        parameters.put("y", y);
-        parameters.put("dx", dx);
-        parameters.put("dy", dy);
-        parameters.put("basePoint", basePoint.toString());
-        parameters.put("duration", duration);
-
-        this.execute(ELEMENT_DRAG_AND_DROP, parameters);
-    }
-
-    /**
-     * Move the mouse to the point (Base point of element bounding rectangle + x, y coordinates).
-     *
-     * @param basePoint {@link BasePoint} of element bounding rectangle.
-     * @param x X Coordinate relative to base point of element bounding rectangle.
-     * @param y Y Coordinate relative to base point of element bounding rectangle.
-     */
-    public void mouseMove(BasePoint basePoint, int x, int y) {
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
-
-        parameters.put("id", this.getId());
-        parameters.put("x", x);
-        parameters.put("y", y);
-        parameters.put("basePoint", basePoint.toString());
-        parameters.put("action", "move");
-
-        this.execute(ELEMENT_MOUSE_ACTION, parameters);
-    }
-
-    /**
-     * Click the mouse on the point (Base point of element bounding rectangle + x, y coordinates).
-     *
-     * @param basePoint {@link BasePoint} of element bounding rectangle.
-     * @param x X Coordinate relative to base point of element bounding rectangle.
-     * @param y Y Coordinate relative to base point of element bounding rectangle.
-     */
-    public void mouseClick(BasePoint basePoint, int x, int y) {
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
-
-        parameters.put("id", this.getId());
-        parameters.put("x", x);
-        parameters.put("y", y);
-        parameters.put("basePoint", basePoint.toString());
-        parameters.put("action", "click");
-
-        this.execute(ELEMENT_MOUSE_ACTION, parameters);
-    }
-
-
-    /**
-     * Right click the mouse on the point (Base point of element bounding rectangle + x, y coordinates).
-     *
-     * @param basePoint {@link BasePoint} of element bounding rectangle.
-     * @param x X Coordinate relative to base point of element bounding rectangle.
-     * @param y Y Coordinate relative to base point of element bounding rectangle.
-     */
-    public void mouseRightClick(BasePoint basePoint, int x, int y) {
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
-
-        parameters.put("id", this.getId());
-        parameters.put("x", x);
-        parameters.put("y", y);
-        parameters.put("basePoint", basePoint.toString());
-        parameters.put("action", "rightClick");
-
-        this.execute(ELEMENT_MOUSE_ACTION, parameters);
-    }
-
-
-    /**
-     * Double click the mouse on the point (Base point of element bounding rectangle + x, y coordinates).
-     *
-     * @param basePoint {@link BasePoint} of element bounding rectangle.
-     * @param x X Coordinate relative to base point of element bounding rectangle.
-     * @param y Y Coordinate relative to base point of element bounding rectangle.
-     */
-    public void mouseDoubleClick(BasePoint basePoint, int x, int y) {
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
-
-        parameters.put("id", this.getId());
-        parameters.put("x", x);
-        parameters.put("y", y);
-        parameters.put("basePoint", basePoint.toString());
-        parameters.put("action", "doubleClick");
-
-        this.execute(ELEMENT_MOUSE_ACTION, parameters);
-    }
-
-    /**
-     * Get Bounding Rectangle of element.
-     * @return Rectangle instance.
-     */
-    //todo Проверить
-    public Rectangle getElementRect() {
-        String rectString = this.getAttribute("BoundingRectangle");
-        String[] rect = rectString.split(",");
-        return new Rectangle(Integer.parseInt(rect[0].trim()), Integer.parseInt(rect[1].trim())
-                , Integer.parseInt(rect[3].trim()), Integer.parseInt(rect[2].trim()));
-    }
-
-
-    /**
-     * Cast DesktopElement to a Typed Element.
-     * @return WebElementExtensions instance.
-     */
-    public WebElementCast to(){
-        return new WebElementCast(this);
-    }
-
-    /**
-     * Cast DesktopElement to a Coordinate Element.
-     * @return WebElementExtensions instance.
-     */
-    //todo Проверить
-    public CoordinateElement toCoordinateElement(){
-        Rectangle rectangle = getElementRect();
-        return new CoordinateElement(this, BasePoint.TOP_LEFT, 0, 0, rectangle.getWidth(), rectangle.getHeight());
+    public MouseActions mouseActions() {
+        return new MouseActions(this);
     }
 
     /**
      * Get Touch Actions instance.
+     *
      * @return Touch Actions instance.
      */
     //todo Проверить
-    public TouchActions touchActions(){
+    public TouchActions touchActions() {
         return new TouchActions(this);
     }
 
     /**
      * Get Screenshot Actions of current item.
+     *
      * @return ScreenshotActions instance.
      */
-    public ScreenshotActions screenshotActions(){
+    public ScreenshotActions screenshotActions() {
         return new ScreenshotActions(this);
     }
+
+    //endregion
+
+    //region Cast
+
+    /**
+     * Cast DesktopElement to a Typed Element.
+     *
+     * @return WebElementExtensions instance.
+     */
+    public WebElementCast castTo() {
+        return new WebElementCast(this);
+    }
+
+
+    /**
+     * Cast DesktopElement to a Coordinate Element.
+     *
+     * @return WebElementExtensions instance.
+     */
+    //todo Проверить
+    public CoordinateElement toCoordinateElement() {
+        Rectangle rectangle = getElementRect();
+        return new CoordinateElement(this, BasePoint.TOP_LEFT, 0, 0, rectangle.getWidth(), rectangle.getHeight());
+    }
+
+    //endregion
 
 }
