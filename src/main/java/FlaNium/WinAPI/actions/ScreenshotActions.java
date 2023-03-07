@@ -28,7 +28,7 @@ public class ScreenshotActions {
     }
 
     public ScreenshotActions(DesktopElement desktopElement) {
-        this.driver = (FlaNiumDriver) desktopElement.getWrappedDriver();;
+        this.driver = (FlaNiumDriver) desktopElement.getWrappedDriver();
         this.id = desktopElement.getId();
         this.command = ELEMENT_SCREENSHOT;
     }

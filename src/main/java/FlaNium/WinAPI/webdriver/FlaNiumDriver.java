@@ -1,6 +1,7 @@
 package FlaNium.WinAPI.webdriver;
 
 import FlaNium.WinAPI.actions.KeyboardActions;
+import FlaNium.WinAPI.actions.MouseActions;
 import FlaNium.WinAPI.actions.ScreenshotActions;
 import FlaNium.WinAPI.actions.TouchActions;
 import org.openqa.selenium.NoSuchElementException;
@@ -10,13 +11,10 @@ import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.remote.Response;
 
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 
 public class FlaNiumDriver extends RemoteWebDriver {
 
-
-    private static final String DRAG_AND_DROP = "dragAndDrop";
     private static final String GET_ACTIVE_WINDOW = "getActiveWindow";
 
 
@@ -62,44 +60,19 @@ public class FlaNiumDriver extends RemoteWebDriver {
         super(new FlaNiumDriverCommandExecutor(remoteAddress), dc);
     }
 
+    // ----------------------- Override --------------------------------------------------------------------------------
 
-    /**
-     * Drags and drops the mouse from the starting point with the given distance.
-     *
-     * @param x  X coordinate of the start point.
-     * @param y  Y coordinate of the start point.
-     * @param dx The x distance to drag and drop, + for right, - for left.
-     * @param dy The y distance to drag and drop, + for down, - for up.
-     */
-    public void dragAndDrop(int x, int y, int dx, int dy) {
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("x", x);
-        parameters.put("y", y);
-        parameters.put("dx", dx);
-        parameters.put("dy", dy);
-
-        this.execute(DRAG_AND_DROP, parameters);
+    @Override
+    public Response execute(String driverCommand, Map<String, ?> parameters) {
+        return super.execute(driverCommand, parameters);
     }
 
-    /**
-     * Drags and drops the mouse from the starting point with the given distance within the specified time.
-     *
-     * @param x        X coordinate of the start point.
-     * @param y        Y coordinate of the start point.
-     * @param dx       The x distance to drag and drop, + for right, - for left.
-     * @param dy       The y distance to drag and drop, + for down, - for up.
-     * @param duration Execution time in milliseconds.
-     */
-    public void smoothDragAndDrop(int x, int y, int dx, int dy, int duration) {
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("x", x);
-        parameters.put("y", y);
-        parameters.put("dx", dx);
-        parameters.put("dy", dy);
-        parameters.put("duration", duration);
-
-        this.execute(DRAG_AND_DROP, parameters);
+    @Override
+    public Response execute(String command) {
+        return super.execute(command);
     }
+
+    // ------------------------ Methods --------------------------------------------------------------------------------
 
     /**
      * Get the active window.
@@ -131,16 +104,8 @@ public class FlaNiumDriver extends RemoteWebDriver {
         }
     }
 
-    @Override
-    public Response execute(String driverCommand, Map<String, ?> parameters) {
-        return super.execute(driverCommand, parameters);
-    }
 
-    @Override
-    public Response execute(String command) {
-        return super.execute(command);
-    }
-
+    // --------------------------- Actions -----------------------------------------------------------------------------
     /**
      * Get Touch Actions instance.
      *
@@ -159,6 +124,14 @@ public class FlaNiumDriver extends RemoteWebDriver {
         return new KeyboardActions(this);
     }
 
+    /**
+     * Get Mouse Actions instance.
+     *
+     * @return Mouse Actions instance.
+     */
+    public MouseActions mouseActions() {
+        return new MouseActions(this);
+    }
 
     /**
      * Get Screenshot Actions of current item.
