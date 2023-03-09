@@ -230,7 +230,6 @@ public class DesktopElement extends RemoteWebElement {
      *
      * @return Rectangle instance.
      */
-    //todo Проверить
     public Rectangle getElementRect() {
         String rectString = this.getAttribute("BoundingRectangle");
         String[] rect = rectString.split(",");
@@ -255,7 +254,6 @@ public class DesktopElement extends RemoteWebElement {
      *
      * @return Touch Actions instance.
      */
-    //todo Проверить
     public TouchActions touchActions() {
         return new TouchActions(this);
     }
@@ -286,7 +284,6 @@ public class DesktopElement extends RemoteWebElement {
      *
      * @return WebElementExtensions instance.
      */
-    //todo Проверить
     public CoordinateElement toCoordinateElement() {
         Rectangle rectangle = getElementRect();
         return new CoordinateElement(this, BasePoint.TOP_LEFT, 0, 0, rectangle.getWidth(), rectangle.getHeight());

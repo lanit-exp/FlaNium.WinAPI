@@ -13,6 +13,7 @@ public class DesktopOptions implements FlaNiumOptions {
     private static final String ARGUMENTS_OPTION = "args";
     private static final String DEBUG_CONNECT_TO_RUNNING_APP_OPTION = "debugConnectToRunningApp";
     private static final String LAUNCH_DELAY_OPTION = "launchDelay";
+    private static final String PROCESS_FIND_TIMEOUT = "processFindTimeOut";
     private static final String PROCESS_NAME_OPTION = "processName";
     private static final String INJECTION_ACTIVATE = "injectionActivate";
     private static final String APP_TYPE = "appType";
@@ -22,6 +23,7 @@ public class DesktopOptions implements FlaNiumOptions {
     private String arguments;
     private Boolean debugConnectToRunningApp;
     private Integer launchDelay;
+    private Integer processFindTimeOut;
     private String processName;
     private Boolean injectionActivate;
     private String appType;
@@ -59,10 +61,19 @@ public class DesktopOptions implements FlaNiumOptions {
 
     /**
      * Sets the launch delay in milliseconds, to be waited to let visuals to initialize after application started.
-     * @param launchDelay Launch delay in milliseconds
+     * @param launchDelay Launch delay in milliseconds.
      */
     public DesktopOptions setLaunchDelay(Integer launchDelay) {
         this.launchDelay = launchDelay;
+        return this;
+    }
+
+    /**
+     * Sets the search time for the application process specified in the processName parameter.
+     * @param processFindTimeOut Process lookup timeout in milliseconds.
+     */
+    public DesktopOptions setProcessFindTimeOut(Integer processFindTimeOut) {
+        this.processFindTimeOut = processFindTimeOut;
         return this;
     }
 
@@ -125,6 +136,10 @@ public class DesktopOptions implements FlaNiumOptions {
 
         if (launchDelay != null) {
             capabilityDictionary.put(LAUNCH_DELAY_OPTION, launchDelay);
+        }
+
+        if (processFindTimeOut != null) {
+            capabilityDictionary.put(PROCESS_FIND_TIMEOUT, processFindTimeOut);
         }
 
         if (processName != null) {

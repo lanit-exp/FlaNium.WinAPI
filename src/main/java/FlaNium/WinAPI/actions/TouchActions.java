@@ -27,7 +27,6 @@ public class TouchActions {
         this.y = rectangle.getY() + y;
     }
 
-    //todo Проверить
     public TouchActions(DesktopElement desktopElement) {
         this.driver = (FlaNiumDriver) desktopElement.getWrappedDriver();
         Rectangle rectangle = desktopElement.getElementRect();
