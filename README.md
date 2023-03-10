@@ -291,4 +291,62 @@ RootElement - это элемент выступающий в качестве �
    driver.killAllProcessesByName(String processName);
 ```
 
-## 4. 
+## 4. Упрощенная инициализация
+
+Получить экземпляр драйвера и начать работать можно вызвав лишь один метод:
+
+``` Java
+   FlaNiumDriver driver = FlaNium.initDriver();
+```
+
+На этом всё! Больше ни чего в коде указывать не надо. 
+После вызова метода произойдет инициализация и запуск драйвера и инициализация и запуск приложеня.
+
+Но чтобы FlaNium понял что где и как запускать, в корень проекта в папку ресурсов нужно положить 2 файла:
+`flanium_driver.properties` и `flanium_app.properties`.
+
+Синтаксис и примеры файлов:
+
+### flanium_driver.properties
+
+```
+   flanium.driver.remote=true
+
+   flanium.driver.remoteUrl=http://192.168.100.10:9999
+
+   flanium.driver.exe=src/main/resources/driver/FlaNium.Desktop.Driver/FlaNium.Driver.exe
+   flanium.driver.port=0
+   flanium.driver.verbose=true
+   flanium.driver.silent=false
+   flanium.driver.timeout=20
+   #flanium.driver.logFile=
+```
+### flanium_app.properties
+
+```
+    flanium.app.path=src/main/resources/apps/Application.exe
+    #flanium.app.args=
+    flanium.app.connectToRunningApp=false
+    flanium.app.launchDelay=5
+        
+    flanium.app.processFindTimeOut=30
+    flanium.app.processName=Application
+        
+    flanium.app.injectionActivate=false
+    #flanium.app.appType=
+        
+    #flanium.app.responseTimeout=
+```
+
+Описание всех параметров есть выше, добавлю только основные моменты:
+
+* параметры `flanium.app.path` и (`flanium.driver.remoteUrl` или `flanium.driver.exe`) - обязательны.
+* `flanium.driver.remote` по умолчанию false.
+* все временные параметры указываются в секундах.
+* Любой из параметров можно установить или изменить через код используя метод `System.setProperty("flanium.driver.remote", "true");` или извне через `-Dflanium.driver.remote=true`.
+* Если требуется работа с несколькими конфигами приложений то можно использовать метод принимающий относительный путь до файла properties:
+
+``` Java
+   FlaNiumDriver driver = FlaNium.initDriver("apps/app1.properties");
+```
+* Файл конфигурации драйвера может быть только один.
