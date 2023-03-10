@@ -22,6 +22,7 @@ import java.util.*;
 public class DesktopElement extends RemoteWebElement {
 
     private static final String WINDOW_GET_ACTIVE_WINDOW = "windowGetActiveWindow";
+    private static final String SET_ROOT_ELEMENT = "setRootElement";
 
 
     public DesktopElement(WebElement element) {
@@ -237,6 +238,15 @@ public class DesktopElement extends RemoteWebElement {
                 , Integer.parseInt(rect[3].trim()), Integer.parseInt(rect[2].trim()));
     }
 
+    /**
+     * Sets the current element as the root element of the driver.
+     */
+    public void setAsRootElement(){
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("type", "element");
+        parameters.put("id", this.getId());
+        this.execute(SET_ROOT_ELEMENT, parameters);
+    }
 
     // --------------------------- Actions -----------------------------------------------------------------------------
 

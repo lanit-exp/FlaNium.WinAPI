@@ -98,11 +98,10 @@ public class DesktopOptions implements FlaNiumOptions {
 
     /**
      * Set type of application. Use with InjectionActivate.
-     * Need EXTENDED version of FlaNium Driver.
      * @param appType Type of application.
      */
-    public DesktopOptions setAppType(AppType appType){
-        this.appType = appType.toString();
+    public DesktopOptions setAppType(String appType){
+        this.appType = appType;
         return this;
     }
 
@@ -161,7 +160,4 @@ public class DesktopOptions implements FlaNiumOptions {
         return new DesiredCapabilities(capabilityDictionary);
     }
 
-    public enum AppType{
-        DELPHI;
-    }
 }

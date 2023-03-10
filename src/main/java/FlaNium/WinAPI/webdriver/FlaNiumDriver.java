@@ -11,11 +11,15 @@ import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.remote.Response;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 public class FlaNiumDriver extends RemoteWebDriver {
 
     private static final String GET_ACTIVE_WINDOW = "getActiveWindow";
+    private static final String SET_ROOT_ELEMENT = "setRootElement";
+    private static final String CHANGE_PROCESS = "changeProcess";
+    private static final String KILL_PROCESSES = "killProcesses";
 
 
     /**
@@ -75,9 +79,9 @@ public class FlaNiumDriver extends RemoteWebDriver {
     // ------------------------ Methods --------------------------------------------------------------------------------
 
     /**
-     * Get the active window.
+     * Get the active window or current root element.
      *
-     * @return The active window.
+     * @return The active window or current root element.
      */
     public RemoteWebElement getActiveWindow() {
         try {
@@ -104,6 +108,59 @@ public class FlaNiumDriver extends RemoteWebDriver {
         }
     }
 
+    /**
+     * Sets the desktop as the root element for item searches and other actions.
+     * By default, the root element is the application's main window.
+     */
+    public void setDesktopAsRootElement(){
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("type", "desktop");
+        this.execute(SET_ROOT_ELEMENT, parameters);
+    }
+
+    /**
+     * Sets the main window of the connected process as the root element.
+     */
+    public void resetRootElement(){
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("type", "process");
+        this.execute(SET_ROOT_ELEMENT, parameters);
+    }
+
+    /**
+     * Sets the given web element as the root element.
+     * @param webElement Any web element.
+     */
+    public void setRootElement(RemoteWebElement webElement){
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("type", "element");
+        parameters.put("id", webElement.getId());
+        this.execute(SET_ROOT_ELEMENT, parameters);
+    }
+
+    /**
+     * Attaches to the first process found by name.
+     * Changes the root element to the process's main window.
+     * Also terminates the given process at the end of the session.
+     * @param processName Process name.
+     * @param timeOut process search timeout in ms.
+     */
+    public void changeProcess(String processName, int timeOut){
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("name", processName);
+        parameters.put("timeout", timeOut);
+        this.execute(CHANGE_PROCESS, parameters);
+    }
+
+    /**
+     * Terminates all processes found by name.
+     * @param processName Process name.
+     */
+    public void killAllProcessesByName(String processName){
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("name", processName);
+        this.execute(KILL_PROCESSES, parameters);
+    }
 
     // --------------------------- Actions -----------------------------------------------------------------------------
     /**
