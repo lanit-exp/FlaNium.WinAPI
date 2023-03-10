@@ -19,13 +19,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class FlaNiumDriverService extends DriverService {
 
-    private static final String EXE_PROP = "flanium.service.exe";
-    private static final String PORT_PROP = "flanium.service.port";
-    private static final String VERBOSE_PROP = "flanium.service.verbose";
-    private static final String SILENT_PROP = "flanium.service.silent";
-    private static final String TIMEOUT_PROP = "flanium.service.timeout";
-    private static final String LOG_FILE_PROP = "flanium.service.logFile";
-
 
     protected FlaNiumDriverService(File executable, int port, Duration timeout, List<String> args,
                                    Map<String, String> environment) throws IOException {
@@ -135,35 +128,6 @@ public class FlaNiumDriverService extends DriverService {
             if (port == 0) port = PortProber.findFreePort();
 
             return createDriverService(exe, port, timeout, createArgs(), ImmutableMap.of());
-        }
-
-        /**
-         * Creates a new {@link FlaNiumDriverService} to manage the FlaNium Desktop Driver server.
-         * <p>
-         * Parameters from system properties are used:
-         * <p>{@value EXE_PROP}
-         * <p>{@value PORT_PROP}
-         * <p>{@value VERBOSE_PROP}
-         * <p>{@value SILENT_PROP}
-         * <p>{@value TIMEOUT_PROP}
-         * <p>{@value LOG_FILE_PROP}
-         *
-         * @return The new {@link FlaNiumDriverService} object.
-         */
-        public FlaNiumDriverService buildFromSystemProperties() {
-            if (System.getProperty(EXE_PROP) != null) usingDriverExecutable(new File(System.getProperty(EXE_PROP)));
-
-            if (System.getProperty(PORT_PROP) != null) usingPort(Integer.parseInt(System.getProperty(PORT_PROP)));
-
-            if (System.getProperty(VERBOSE_PROP) != null) withVerbose(Boolean.parseBoolean(System.getProperty(VERBOSE_PROP)));
-
-            if (System.getProperty(SILENT_PROP) != null) withSilent(Boolean.parseBoolean(System.getProperty(SILENT_PROP)));
-
-            if (System.getProperty(TIMEOUT_PROP) != null) withTimeout(Duration.ofSeconds(Integer.parseInt(System.getProperty(TIMEOUT_PROP))));
-
-            if (System.getProperty(LOG_FILE_PROP) != null) withLogFile(new File(System.getProperty(LOG_FILE_PROP)));
-
-            return build();
         }
 
 
