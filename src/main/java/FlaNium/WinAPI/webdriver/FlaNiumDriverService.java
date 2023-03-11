@@ -145,7 +145,7 @@ public class FlaNiumDriverService extends DriverService {
 
             if (verbose) args.add("--verbose");
 
-            if (logFile != null) args.add(String.format("--log-path='%s'", logFile.getAbsolutePath()));
+            if (logFile != null) args.add(String.format("--log-path=%s", logFile.getAbsolutePath()));
 
             args.add(String.format("--port=%d", port));
 
