@@ -1,15 +1,15 @@
 ## Changelog
 
-### 2.0.0 (2023-01-12)
+### 2.0.0-beta (2023-03-14)
 
-#### Breaking changes
+
+* The library code has been refactored.
 * Change selenium library version to 4.7.2
+* Some of the methods of the FlaNiumDriver and DesktopElement classes have been moved.
+* Added many new methods.
+* Added simplified initialization.
 
-#### Enhancements
-* Added smoothDragAndDrop method.
-
-#### Bug fixes
-* None
+Details in the Readme.md
 
 ### 1.6.0 (2022-02-12)
 
