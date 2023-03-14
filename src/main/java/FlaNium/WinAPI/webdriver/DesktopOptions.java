@@ -11,29 +11,28 @@ import java.util.Map;
 public class DesktopOptions implements FlaNiumOptions {
     private static final String APPLICATION_PATH_OPTION = "app";
     private static final String ARGUMENTS_OPTION = "args";
-    private static final String DEBUG_CONNECT_TO_RUNNING_APP_OPTION = "debugConnectToRunningApp";
+    private static final String CONNECT_TO_RUNNING_APP_OPTION = "connectToRunningApp";
     private static final String LAUNCH_DELAY_OPTION = "launchDelay";
     private static final String PROCESS_FIND_TIMEOUT = "processFindTimeOut";
     private static final String PROCESS_NAME_OPTION = "processName";
     private static final String INJECTION_ACTIVATE = "injectionActivate";
-    private static final String APP_TYPE = "appType";
+    private static final String INJECTION_DLL_TYPE = "injectionDllType";
     private static final String RESPONSE_TIMEOUT = "responseTimeout";
 
     private String applicationPath;
     private String arguments;
-    private Boolean debugConnectToRunningApp;
+    private Boolean connectToRunningApp;
     private Integer launchDelay;
     private Integer processFindTimeOut;
     private String processName;
     private Boolean injectionActivate;
-    private String appType;
+    private String injectionDllType;
     private Integer responseTimeout;
 
 
     /**
-     * Sets the absolute local path to an .exe file to be started.
-     * This capability is not required if debugConnectToRunningApp is specified.
-     * @param applicationPath Absolute local path to an .exe file to be started.
+     * Sets the absolute path to an .exe file to be started.
+     * @param applicationPath Absolute path to an .exe file to be started.
      */
     public DesktopOptions setApplicationPath(String applicationPath) {
         this.applicationPath = applicationPath;
@@ -41,8 +40,8 @@ public class DesktopOptions implements FlaNiumOptions {
     }
 
     /**
-     * Sets startup argunments of the application under test.
-     * @param arguments Startup argunments of the application under test.
+     * Sets startup arguments of the application under test.
+     * @param arguments Startup arguments of the application under test.
      */
     public DesktopOptions setArguments(String arguments) {
         this.arguments = arguments;
@@ -50,12 +49,18 @@ public class DesktopOptions implements FlaNiumOptions {
     }
 
     /**
-     * Sets a value indicating whether debug connect to running app.
-     * If true, then application starting step are skipped.
-     * @param debugConnectToRunningApp Value indicating whether debug connect to running app.
+     * If false (default) - always starts a new application process (with closing the current one, if any).
+     * <p>
+     * If true and the application is not running, then starts the application.
+     * <p>
+     * If true and the application is running, then it simply uses the current state of the application.
+     * <p>
+     * Also, if true - then the application does not close when the session ends.
+     *
+     * @param connectToRunningApp An option that allows you to connect to a previously launched application.
      */
-    public DesktopOptions setDebugConnectToRunningApp(Boolean debugConnectToRunningApp) {
-        this.debugConnectToRunningApp = debugConnectToRunningApp;
+    public DesktopOptions setConnectToRunningApp(Boolean connectToRunningApp) {
+        this.connectToRunningApp = connectToRunningApp;
         return this;
     }
 
@@ -97,11 +102,11 @@ public class DesktopOptions implements FlaNiumOptions {
     }
 
     /**
-     * Set type of application. Use with InjectionActivate.
-     * @param appType Type of application.
+     * Set type of DLL for inject. Use with InjectionActivate.
+     * @param injectionDllType Type of Dll.
      */
-    public DesktopOptions setAppType(String appType){
-        this.appType = appType;
+    public DesktopOptions setInjectionDllType(String injectionDllType){
+        this.injectionDllType = injectionDllType;
         return this;
     }
 
@@ -129,8 +134,8 @@ public class DesktopOptions implements FlaNiumOptions {
             capabilityDictionary.put(ARGUMENTS_OPTION, arguments);
         }
 
-        if (debugConnectToRunningApp != null) {
-            capabilityDictionary.put(DEBUG_CONNECT_TO_RUNNING_APP_OPTION, debugConnectToRunningApp);
+        if (connectToRunningApp != null) {
+            capabilityDictionary.put(CONNECT_TO_RUNNING_APP_OPTION, connectToRunningApp);
         }
 
         if (launchDelay != null) {
@@ -149,8 +154,8 @@ public class DesktopOptions implements FlaNiumOptions {
             capabilityDictionary.put(INJECTION_ACTIVATE, injectionActivate);
         }
 
-        if (appType != null) {
-            capabilityDictionary.put(APP_TYPE, appType);
+        if (injectionDllType != null) {
+            capabilityDictionary.put(INJECTION_DLL_TYPE, injectionDllType);
         }
 
         if (responseTimeout != null) {

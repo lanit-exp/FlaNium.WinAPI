@@ -82,19 +82,19 @@ public class FlaNium {
         String processFindTimeOut = System.getProperty(PropertyList.App.PROCESS_FIND_TIMEOUT.getValue());
         String processName = System.getProperty(PropertyList.App.PROCESS_NAME.getValue());
         String injectionActivate = System.getProperty(PropertyList.App.INJECTION_ACTIVATE.getValue());
-        String appType = System.getProperty(PropertyList.App.APP_TYPE.getValue());
+        String injectionDllType = System.getProperty(PropertyList.App.INJECTION_DLL_TYPE.getValue());
         String responseTimeout = System.getProperty(PropertyList.App.APP_RESPONSE_TIMEOUT.getValue());
 
         DesktopOptions options = new DesktopOptions();
 
         if (notNullAndEmpty(app)) options.setApplicationPath(new File(app).getAbsolutePath());
         if (notNullAndEmpty(args)) options.setArguments(args);
-        if (notNullAndEmpty(connectToRunningApp)) options.setDebugConnectToRunningApp(Boolean.parseBoolean(connectToRunningApp));
+        if (notNullAndEmpty(connectToRunningApp)) options.setConnectToRunningApp(Boolean.parseBoolean(connectToRunningApp));
         if (notNullAndEmpty(launchDelay)) options.setLaunchDelay(Integer.parseInt(launchDelay) * 1000);
         if (notNullAndEmpty(processFindTimeOut)) options.setProcessFindTimeOut(Integer.parseInt(processFindTimeOut) * 1000);
         if (notNullAndEmpty(processName)) options.setProcessName(processName);
         if (notNullAndEmpty(injectionActivate)) options.setInjectionActivate(Boolean.parseBoolean(injectionActivate));
-        if (notNullAndEmpty(appType)) options.setAppType(appType);
+        if (notNullAndEmpty(injectionDllType)) options.setInjectionDllType(injectionDllType);
         if (notNullAndEmpty(responseTimeout)) options.setResponseTimeout(Integer.parseInt(responseTimeout) * 1000);
 
         return options;

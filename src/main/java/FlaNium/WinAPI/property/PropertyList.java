@@ -43,7 +43,7 @@ public class PropertyList {
         PROCESS_NAME ( "flanium.app.processName"),
         
         INJECTION_ACTIVATE ( "flanium.app.injectionActivate"),
-        APP_TYPE ( "flanium.app.appType"),
+        INJECTION_DLL_TYPE ( "flanium.app.injectionDllType"),
         
         APP_RESPONSE_TIMEOUT ( "flanium.app.responseTimeout");
 
