@@ -1,16 +1,37 @@
 package FlaNium.WinAPI.actions;
 
+import FlaNium.WinAPI.DesktopElement;
 import FlaNium.WinAPI.webdriver.FlaNiumDriver;
 import org.openqa.selenium.Point;
+import org.openqa.selenium.Rectangle;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class TouchActions {
 
     private FlaNiumDriver driver;
+    private int x;
+    private int y;
 
     public TouchActions(FlaNiumDriver driver) {
         this.driver = driver;
+        this.x = 0;
+        this.y = 0;
+    }
+
+    public TouchActions(DesktopElement desktopElement, int x, int y) {
+        this.driver = (FlaNiumDriver) desktopElement.getWrappedDriver();
+        Rectangle rectangle = desktopElement.getElementRect();
+        this.x = rectangle.getX() + x;
+        this.y = rectangle.getY() + y;
+    }
+
+    public TouchActions(DesktopElement desktopElement) {
+        this.driver = (FlaNiumDriver) desktopElement.getWrappedDriver();
+        Rectangle rectangle = desktopElement.getElementRect();
+        this.x = rectangle.getX();
+        this.y = rectangle.getY();
     }
 
 
@@ -20,8 +41,9 @@ public class TouchActions {
      * @param points
      */
     public void tap(Point[] points) {
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("points", points);
+        HashMap<String, Object> parameters = new HashMap<>();
+
+        parameters.put("points", offsetPoints(points));
 
         driver.execute("touchActionsTap", parameters);
     }
@@ -33,8 +55,8 @@ public class TouchActions {
      * @param points   The points that should be hold down.
      */
     public void hold(Integer duration, Point[] points) {
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("points", points);
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("points", offsetPoints(points));
         parameters.put("duration", duration);
 
         driver.execute("touchActionsHold", parameters);
@@ -50,8 +72,8 @@ public class TouchActions {
      * @param angle       The angle of the two points, relative to the x-axis.
      */
     public void pinch(Point center, double startRadius, double endRadius, Integer duration, double angle) {
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("center", center);
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("center", offsetPoint(center));
         parameters.put("startRadius", startRadius);
         parameters.put("endRadius", endRadius);
         parameters.put("duration", duration);
@@ -67,9 +89,9 @@ public class TouchActions {
      * @param startEndPoints The list of start/end point tuples.
      */
     public void transition(Integer duration, StartEndPoint[] startEndPoints) {
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
+        HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("duration", duration);
-        parameters.put("startEndPoints", startEndPoints);
+        parameters.put("startEndPoints", offsetStartAndPoints(startEndPoints));
 
         driver.execute("touchActionsTransition", parameters);
     }
@@ -77,14 +99,14 @@ public class TouchActions {
     /**
      * Performs a touch-drag from the start point to the end point.
      *
-     * @param duration   The duration of the action (in milliseconds).
+     * @param duration       The duration of the action (in milliseconds).
      * @param startEndPoints The list of start/end point tuples.
      * @param durationHold   The duration of the hold on start points (in milliseconds).
      */
     public void drag(Integer duration, StartEndPoint[] startEndPoints, Integer durationHold) {
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
+        HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("duration", duration);
-        parameters.put("startEndPoints", startEndPoints);
+        parameters.put("startEndPoints", offsetStartAndPoints(startEndPoints));
         parameters.put("durationHold", durationHold);
 
         driver.execute("touchActionsDrag", parameters);
@@ -101,8 +123,8 @@ public class TouchActions {
      * @param duration   The total duration for the transition (in milliseconds).
      */
     public void rotate(Point center, double radius, double startAngle, double endAngle, Integer duration) {
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("center", center);
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("center", offsetPoint(center));
         parameters.put("radius", radius);
         parameters.put("startAngle", startAngle);
         parameters.put("endAngle", endAngle);
@@ -156,5 +178,19 @@ public class TouchActions {
         }
     }
 
+
+    private Point offsetPoint(Point point) {
+        return new Point(point.getX() + x, point.getY() + y);
+    }
+
+    private Point[] offsetPoints(Point[] points) {
+        return Arrays.stream(points).map(this::offsetPoint).toArray(Point[]::new);
+    }
+
+    private StartEndPoint[] offsetStartAndPoints(StartEndPoint[] points) {
+        return Arrays.stream(points)
+                .map(startEndPoint -> new StartEndPoint(offsetPoint(startEndPoint.getStartPoint()), offsetPoint(startEndPoint.getEndPoint())))
+                .toArray(StartEndPoint[]::new);
+    }
 
 }

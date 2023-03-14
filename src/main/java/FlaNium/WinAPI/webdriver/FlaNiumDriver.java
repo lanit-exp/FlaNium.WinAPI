@@ -1,44 +1,26 @@
 package FlaNium.WinAPI.webdriver;
 
-import FlaNium.WinAPI.enums.ImageFormat;
-import FlaNium.WinAPI.enums.KeyCombination;
-import FlaNium.WinAPI.enums.KeyboardLayout;
-import org.apache.commons.io.FileUtils;
+import FlaNium.WinAPI.actions.KeyboardActions;
+import FlaNium.WinAPI.actions.MouseActions;
+import FlaNium.WinAPI.actions.ScreenshotActions;
+import FlaNium.WinAPI.actions.TouchActions;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.remote.Response;
 
-import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 public class FlaNiumDriver extends RemoteWebDriver {
 
-    private static final String CUSTOM_SCREENSHOT = "customScreenshot";
-    private static final String DRAG_AND_DROP = "dragAndDrop";
     private static final String GET_ACTIVE_WINDOW = "getActiveWindow";
-    private static final String SEND_CHARS_TO_ACTIVE_ELEMENT = "sendCharsToActiveElement";
-    private static final String GET_KEYBOARD_LAYOUT = "getKeyboardLayout";
-    private static final String SET_KEYBOARD_LAYOUT = "setKeyboardLayout";
-    private static final String GET_CLIPBOARD_TEXT = "getClipboardText";
-    private static final String SET_CLIPBOARD_TEXT = "setClipboardText";
-    private static final String KEY_COMBINATION = "keyCombination";
+    private static final String SET_ROOT_ELEMENT = "setRootElement";
+    private static final String CHANGE_PROCESS = "changeProcess";
+    private static final String KILL_PROCESSES = "killProcesses";
 
-
-    /**
-     * Initializes a new instance of the {@link FlaNiumDriver} class using the specified options
-     *
-     * @param options Thre {@link FlaNiumOptions} to be used with the FlaNium driver.
-     */
-    public FlaNiumDriver(FlaNiumOptions options) {
-        this(createDefaultService(options.getClass()), options);
-    }
 
     /**
      * Initializes a new instance of the {@link FlaNiumDriver} class using the specified {@link FlaNiumDriverService}
@@ -82,115 +64,28 @@ public class FlaNiumDriver extends RemoteWebDriver {
         super(new FlaNiumDriverCommandExecutor(remoteAddress), dc);
     }
 
+    // ----------------------- Override --------------------------------------------------------------------------------
 
-    private static FlaNiumDriverService createDefaultService(Class<? extends FlaNiumOptions> optionsType) {
-        if (optionsType == DesktopOptions.class)
-            return FlaNiumDriverService.createDesktopService();
-
-        throw new IllegalArgumentException(
-                "Option type must be type of DesktopOptions");
+    @Override
+    public Response execute(String driverCommand, Map<String, ?> parameters) {
+        return super.execute(driverCommand, parameters);
     }
 
+    @Override
+    public Response execute(String command) {
+        return super.execute(command);
+    }
+
+    // ------------------------ Methods --------------------------------------------------------------------------------
+
     /**
-     * Taking a screenshot of the entire screen.
+     * Get the active window or current root element.
      *
-     * @param outputType  Return type BASE64, BYTES or FILE.
-     * @param imageFormat Image format: BMP, EMF, WMF, GIF, JPEG, PNG, TIFF, EXIF, ICON.
-     * @return Screenshot of the entire screen.
-     * @throws WebDriverException
+     * @return The active window or current root element.
      */
-    public <X> X getScreenshot(OutputType<X> outputType, ImageFormat imageFormat) throws WebDriverException {
-
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("format", imageFormat.toString());
-
-        Response response = this.execute(CUSTOM_SCREENSHOT, parameters);
-
-        Object result = response.getValue();
-        String base64EncodedPng;
-        if (result instanceof String) {
-            base64EncodedPng = (String) result;
-            return outputType.convertFromBase64Png(base64EncodedPng);
-        } else if (result instanceof byte[]) {
-            base64EncodedPng = new String((byte[]) ((byte[]) result));
-            return outputType.convertFromBase64Png(base64EncodedPng);
-        } else {
-            throw new RuntimeException(String.format("Unexpected result for %s command: %s", "screenshot", result == null ? "null" : result.getClass().getName() + " instance"));
-        }
-    }
-
-    /**
-     * Taking a screenshot of the entire screen.
-     *
-     * @param imageFormat Image format: BMP, EMF, WMF, GIF, JPEG, PNG, TIFF, EXIF, ICON.
-     * @return Full Screen Screenshot File.
-     */
-    public File getScreenshotFile(ImageFormat imageFormat) {
-        return getScreenshot(OutputType.FILE, imageFormat);
-    }
-
-    /**
-     * Taking a screenshot of the entire screen. Image format: PNG.
-     *
-     * @return Full Screen Screenshot File.
-     */
-    public File getPngScreenshotFile() {
-        return getScreenshotFile(ImageFormat.PNG);
-    }
-
-    /**
-     * Taking a screenshot of the entire screen. Image format: JPEG.
-     *
-     * @return Full Screen Screenshot File.
-     */
-    public File getJpegScreenshotFile() {
-        return getScreenshotFile(ImageFormat.JPEG);
-    }
-
-    /**
-     * Taking a screenshot of the entire screen and save to file. Image format: PNG.
-     *
-     * @param file File path.
-     * @throws IOException
-     */
-    public void savePngScreenshotFile(String file) throws IOException {
-        FileUtils.copyFile(getPngScreenshotFile(), new File(file));
-    }
-
-    /**
-     * Taking a screenshot of the entire screen and save to file. Image format: JPEG.
-     *
-     * @param file File path.
-     * @throws IOException
-     */
-    public void saveJpegScreenshotFile(String file) throws IOException {
-        FileUtils.copyFile(getJpegScreenshotFile(), new File(file));
-    }
-
-    /**
-     * Drags and drops the mouse from the starting point with the given distance.
-     * @param x X coordinate of the start point.
-     * @param y Y coordinate of the start point.
-     * @param dx The x distance to drag and drop, + for right, - for left.
-     * @param dy The y distance to drag and drop, + for down, - for up.
-     */
-    public void dragAndDrop(int x, int y, int dx, int dy) {
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("x", x);
-        parameters.put("y", y);
-        parameters.put("dx", dx);
-        parameters.put("dy", dy);
-
-        this.execute(DRAG_AND_DROP, parameters);
-    }
-
-    /**
-     * Get the active window.
-     * @return The active window.
-     */
-    public RemoteWebElement getActiveWindow(){
+    public RemoteWebElement getActiveWindow() {
         try {
-            Response  response = this.execute(GET_ACTIVE_WINDOW);
+            Response response = this.execute(GET_ACTIVE_WINDOW);
 
             Object value = response.getValue();
 
@@ -209,96 +104,98 @@ public class FlaNiumDriver extends RemoteWebDriver {
             return result;
 
         } catch (NoSuchElementException e) {
-           return null;
+            return null;
         }
     }
 
-
     /**
-     * Simulate keystrokes. Send chars to active element.
-     * @param chars String of chars
+     * Sets the desktop as the root element for item searches and other actions.
+     * By default, the root element is the application's main window.
      */
-    public void sendChars(String chars) {
+    public void setDesktopAsRootElement(){
         HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put("value", chars);
-
-        this.execute(SEND_CHARS_TO_ACTIVE_ELEMENT, parameters);
+        parameters.put("type", "desktop");
+        this.execute(SET_ROOT_ELEMENT, parameters);
     }
 
-
     /**
-     * Set keyboard layout.
-     * @param keyboardLayout - hex string code of keyboard layout.
+     * Sets the main window of the connected process as the root element.
      */
-    public void setKeyboardLayoutCode(String keyboardLayout) {
+    public void resetRootElement(){
         HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put("value", keyboardLayout);
-
-        this.execute(SET_KEYBOARD_LAYOUT, parameters);
+        parameters.put("type", "process");
+        this.execute(SET_ROOT_ELEMENT, parameters);
     }
 
-
     /**
-     * Get keyboard layout.
-     * @return - hex string code of keyboard layout.
+     * Sets the given web element as the root element.
+     * @param webElement Any web element.
      */
-    public String getKeyboardLayoutCode() {
-        return this.execute(GET_KEYBOARD_LAYOUT).getValue().toString();
-    }
-
-
-    /**
-     * Set keyboard layout.
-     * @param keyboardLayout - {@link KeyboardLayout} instance of keyboard layout.
-     */
-    public void setKeyboardLayout(KeyboardLayout keyboardLayout) {
-        setKeyboardLayoutCode(keyboardLayout.getLayoutCode());
-    }
-
-
-    /**
-     * Get keyboard layout.
-     * @return - {@link KeyboardLayout} instance of keyboard layout.
-     */
-    public KeyboardLayout getKeyboardLayout() {
-        return KeyboardLayout.getKeyboardLayout(getKeyboardLayoutCode());
-    }
-
-
-    /**
-     * Get clipboard text.
-     * @return clipboard text string. Returned empty string if clipboard empty or contains no text.
-     */
-    public String getClipboardText(){
-        return this.execute(GET_CLIPBOARD_TEXT).getValue().toString();
-    }
-
-
-    /**
-     * Set clipboard text.
-     * @param text the text to be copied to the clipboard.
-     */
-    public void setClipboardText(String text){
+    public void setRootElement(RemoteWebElement webElement){
         HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put("value", text);
-
-        this.execute(SET_CLIPBOARD_TEXT, parameters);
+        parameters.put("type", "element");
+        parameters.put("id", webElement.getId());
+        this.execute(SET_ROOT_ELEMENT, parameters);
     }
-
 
     /**
-     * Keystrokes of the selected combination.
-     * @param keyCombination {@link KeyCombination} instance of key combination.
+     * Attaches to the first process found by name.
+     * Changes the root element to the process's main window.
+     * Also terminates the given process at the end of the session.
+     * @param processName Process name.
+     * @param timeOut process search timeout in ms.
      */
-    public void performKeyCombination(KeyCombination keyCombination){
+    public void changeProcess(String processName, int timeOut){
         HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put("value", keyCombination.toString());
-
-        this.execute(KEY_COMBINATION, parameters);
+        parameters.put("name", processName);
+        parameters.put("timeout", timeOut);
+        this.execute(CHANGE_PROCESS, parameters);
     }
 
-    @Override
-    public Response execute(String driverCommand, Map<String, ?> parameters) {
-        return super.execute(driverCommand, parameters);
+    /**
+     * Terminates all processes found by name.
+     * @param processName Process name.
+     */
+    public void killAllProcessesByName(String processName){
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("name", processName);
+        this.execute(KILL_PROCESSES, parameters);
+    }
+
+    // --------------------------- Actions -----------------------------------------------------------------------------
+    /**
+     * Get Touch Actions instance.
+     *
+     * @return Touch Actions instance.
+     */
+    public TouchActions touchActions() {
+        return new TouchActions(this);
+    }
+
+    /**
+     * Get Keyboard Actions instance.
+     *
+     * @return Keyboard Actions instance.
+     */
+    public KeyboardActions keyboardActions() {
+        return new KeyboardActions(this);
+    }
+
+    /**
+     * Get Mouse Actions instance.
+     *
+     * @return Mouse Actions instance.
+     */
+    public MouseActions mouseActions() {
+        return new MouseActions(this);
+    }
+
+    /**
+     * Get Screenshot Actions of current item.
+     *
+     * @return ScreenshotActions instance.
+     */
+    public ScreenshotActions screenshotActions() {
+        return new ScreenshotActions(this);
     }
 }

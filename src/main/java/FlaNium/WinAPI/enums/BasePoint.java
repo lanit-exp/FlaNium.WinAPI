@@ -1,5 +1,7 @@
 package FlaNium.WinAPI.enums;
 
+import FlaNium.WinAPI.exceptions.FlaNiumDriverException;
+
 public enum BasePoint {
 
     TOP_LEFT,
@@ -28,7 +30,7 @@ public enum BasePoint {
            case CENTER_TOP:
            case CENTER_BOTTOM:
                return xTopLeftCoordinate + width/2;
-           default: throw new RuntimeException("Wrong BasePoint");
+           default: throw new FlaNiumDriverException("Wrong BasePoint");
        }
     }
 
@@ -48,7 +50,7 @@ public enum BasePoint {
             case CENTER_RIGHT:
             case CENTER:
                 return yTopLeftCoordinate + height/2;
-            default: throw new RuntimeException("Wrong BasePoint");
+            default: throw new FlaNiumDriverException("Wrong BasePoint");
         }
     }
 }

@@ -1,50 +1,40 @@
 package FlaNium.WinAPI.webdriver;
-import com.google.common.collect.ImmutableList;
+
+import FlaNium.WinAPI.exceptions.FlaNiumDriverException;
 import com.google.common.collect.ImmutableMap;
 import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.internal.Require;
+import org.openqa.selenium.net.PortProber;
 import org.openqa.selenium.remote.service.DriverService;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 
 public class FlaNiumDriverService extends DriverService {
 
-    /**
-     * System property that defines the location of the log that will be written by service
-     */
-    public static final String FLANIUM_DRIVER_LOG_PATH_PROPERTY = "flanium.logpath";
 
-    /**
-     * Creates a default instance of the FlaNiumDriverService using a default path to the FlaNium Desktop Driver.
-     * @return A {@link FlaNiumDriverService} using FlaNium Desktop and random port
-     */
-    public static FlaNiumDriverService createDesktopService() {
-        return new Builder().usingAnyFreePort().buildDesktopService();
+    protected FlaNiumDriverService(File executable, int port, Duration timeout, List<String> args,
+                                   Map<String, String> environment) throws IOException {
+        super(executable, port, timeout, args, environment);
     }
 
-
-    protected FlaNiumDriverService(File executable, int port, ImmutableList<String> args,
-                                   ImmutableMap<String, String> environment) throws IOException {
-        super(executable, port, args, environment);
-    }
 
     public static class Builder extends DriverService.Builder<FlaNiumDriverService, Builder> {
-        private static final String DESKTOP_DRIVER_SERVICE_FILENAME = "FlaNium.Driver.exe";
-
-        private static final String DESKTOP_DRIVER_EXE_PROPERTY = "";
-
-        private static final String DESKTOP_DRIVER_DOCS_URL = "https://github.com/lanit-exp/FlaNium.WinAPI";
-
-        private static final String DESKTOP_DRIVER_DOWNLOAD_URL = "https://github.com/lanit-exp/FlaNium.Desktop.Driver/releases";
 
         private File exe = null;
+        private int port = 9999;
         private boolean verbose = false;
         private boolean silent = false;
-        private final int DEFAULT_PORT = 9999;
+        private Duration timeout = Duration.ofSeconds(20);
+        private File logFile = null;
+
 
         @Override
         public int score(Capabilities capabilities) {
@@ -62,6 +52,18 @@ public class FlaNiumDriverService extends DriverService {
             checkNotNull(file);
             checkExecutable(file);
             this.exe = file;
+            return this;
+        }
+
+        /**
+         * Sets which port the driver server should be started on. A value of 0 indicates that any free port may be used.
+         *
+         * @param port The port to use; must be non-negative.
+         * @return A self reference.
+         */
+        @Override
+        public Builder usingPort(int port) {
+            this.port = Require.nonNegative("Port number", port);
             return this;
         }
 
@@ -88,74 +90,77 @@ public class FlaNiumDriverService extends DriverService {
         }
 
         /**
+         * Configures the timeout waiting for driver server to start.
+         *
+         * @param timeout Timeout waiting for driver server to start.
+         * @return A self reference.
+         */
+        public Builder withTimeout(Duration timeout) {
+            this.timeout = timeout;
+            return this;
+        }
+
+        /**
+         * Configures the driver server to write log to the given file.
+         *
+         * @param logFile A file to write log to.
+         * @return A self reference.
+         */
+
+        @Override
+        public Builder withLogFile(File logFile) {
+            this.logFile = logFile;
+            return this;
+        }
+
+        /**
          * Creates a new {@link FlaNiumDriverService} to manage the FlaNium Desktop Driver server.
          * Before creating a new service, the builder will find a port for the server to listen to.
          *
          * @return The new {@link FlaNiumDriverService} object.
          */
-        public FlaNiumDriverService buildDesktopService() {
-            int port = getPort();
-            if (port == 0) {
-                port = DEFAULT_PORT;
-            }
+        @Override
+        public FlaNiumDriverService build() {
 
-            if (exe == null) {
-                exe = findDesktopDriverExecutable();
-            }
+            if (exe == null)
+                throw new FlaNiumDriverException("Not set driver executable. Use method usingDriverExecutable() in Builder.");
 
-            try {
-                return new FlaNiumDriverService(exe, port, createArgs(), ImmutableMap.<String, String>of());
-            } catch (IOException e) {
-                throw new WebDriverException(e);
-            }
+            if (port == 0) port = PortProber.findFreePort();
+
+            return createDriverService(exe, port, timeout, createArgs(), ImmutableMap.of());
         }
-
 
 
         @Override
         protected File findDefaultExecutable() {
-            return findDesktopDriverExecutable();
+            return null;
         }
 
         @Override
-        protected ImmutableList<String> createArgs() {
-            if (getLogFile() == null) {
-                String logFilePath = System.getProperty(FLANIUM_DRIVER_LOG_PATH_PROPERTY);
-                if (logFilePath != null) {
-                    withLogFile(new File(logFilePath));
-                }
-            }
+        protected List<String> createArgs() {
 
-            ImmutableList.Builder<String> argsBuidler = new ImmutableList.Builder<String>();
+            List<String> args = new ArrayList<>();
 
-            if (silent) {
-                argsBuidler.add("--silent");
-            }
-            if (verbose) {
-                argsBuidler.add("--verbose");
-            }
-            if (getLogFile() != null) {
-                argsBuidler.add(String.format("--log-path=%s", getLogFile().getAbsolutePath()));
-            }
+            if (silent) args.add("--silent");
 
-            argsBuidler.add(String.format("--port=%d", getPort() == 0 ? DEFAULT_PORT : getPort()));
+            if (verbose) args.add("--verbose");
 
-            return argsBuidler.build();
+            if (logFile != null) args.add(String.format("--log-path=%s", logFile.getAbsolutePath()));
+
+            args.add(String.format("--port=%d", port));
+
+            return args;
         }
 
+
         @Override
-        protected FlaNiumDriverService createDriverService(File exe, int port, ImmutableList<String> args,
-                                                           ImmutableMap<String, String> environment) {
+        protected FlaNiumDriverService createDriverService(File exe, int port, Duration timeout, List<String> args,
+                                                           Map<String, String> environment) {
             try {
-                return new FlaNiumDriverService(exe, port, args, environment);
+                return new FlaNiumDriverService(exe, port, timeout, args, environment);
             } catch (IOException e) {
-                throw new WebDriverException(e);
+                throw new FlaNiumDriverException(e);
             }
-        }
-
-        private File findDesktopDriverExecutable() {
-            return findExecutable(DESKTOP_DRIVER_SERVICE_FILENAME, DESKTOP_DRIVER_EXE_PROPERTY,
-                    DESKTOP_DRIVER_DOCS_URL, DESKTOP_DRIVER_DOWNLOAD_URL);
         }
 
 

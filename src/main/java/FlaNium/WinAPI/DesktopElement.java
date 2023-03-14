@@ -1,19 +1,18 @@
 package FlaNium.WinAPI;
 
+import FlaNium.WinAPI.actions.ElementMouseActions;
+import FlaNium.WinAPI.actions.ScreenshotActions;
+import FlaNium.WinAPI.actions.TouchActions;
 import FlaNium.WinAPI.elements.Window;
 import FlaNium.WinAPI.enums.BasePoint;
-import FlaNium.WinAPI.enums.ImageFormat;
-import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.OutputType;
+import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.remote.Response;
 
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
@@ -23,12 +22,10 @@ import java.util.*;
 public class DesktopElement extends RemoteWebElement {
 
     private static final String WINDOW_GET_ACTIVE_WINDOW = "windowGetActiveWindow";
-    private static final String ELEMENT_SCREENSHOT = "elementScreenshot";
-    private static final String ELEMENT_DRAG_AND_DROP = "elementDragAndDrop";
-    private static final String ELEMENT_MOUSE_ACTION = "elementMouseAction";
+    private static final String SET_ROOT_ELEMENT = "setRootElement";
 
 
-    protected DesktopElement(WebElement element) {
+    public DesktopElement(WebElement element) {
         this.setParent(getRemoteWebDriver(element));
         this.setId(getId(element));
     }
@@ -50,8 +47,26 @@ public class DesktopElement extends RemoteWebElement {
         }
     }
 
+    // ----------------- Override --------------------------------------------------------------------------------------
 
-    //region Create from Response
+    protected Response exe(String command, HashMap<String, Object> parameters) {
+        Response response;
+        try {
+            response = this.execute(command, parameters);
+        } catch (NoSuchElementException e) {
+            response = null;
+        }
+        return response;
+    }
+
+    @Override
+    public Response execute(String command, Map<String, ?> parameters) {
+        return super.execute(command, parameters);
+    }
+
+
+    //----------------- Create from Response ---------------------------------------------------------------------------
+
     protected RemoteWebElement createRemoteWebElementFromResponse(Response response) {
         Object value = response.getValue();
         if (value instanceof RemoteWebElement) {
@@ -112,19 +127,10 @@ public class DesktopElement extends RemoteWebElement {
 
         return list;
     }
-    //endregion
 
-    protected Response exe(String command, HashMap<String, Object> parameters) {
-        Response response;
-        try {
-            response = this.execute(command, parameters);
-        } catch (NoSuchElementException e) {
-            response = null;
-        }
-        return response;
-    }
 
-    //region Call Command
+    //-------------------- Call Command --------------------------------------------------------------------------------
+
     protected Response callVoidCommand(String command) {
         HashMap<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("id", this.getId());
@@ -176,29 +182,8 @@ public class DesktopElement extends RemoteWebElement {
         parameters.put("dateTime", dateTime.toString());
         return exe(command, parameters);
     }
-    //endregion
 
-    //region public Method
-
-    /**
-     * Getting the "Name" attribute of an element.
-     * @return The "Name" attribute of the current element.
-     */
-    public String getName() {
-        return this.getAttribute("Name");
-    }
-
-    /**
-     * Get the active window.
-     * @return The active window.
-     */
-    public Window getActiveWindow() {
-        Response response = callVoidCommand(WINDOW_GET_ACTIVE_WINDOW);
-        return new Window(createRemoteWebElementFromResponse(response));
-    }
-    //endregion
-
-    //region Parse
+    // ------------------------- Parse ---------------------------------------------------------------------------------
 
     protected double parseDouble(Response response) {
         String value = response.getValue().toString();
@@ -219,222 +204,100 @@ public class DesktopElement extends RemoteWebElement {
         }
         return LocalDateTime.parse(dateTime);
     }
-    //endregion
+
+    // --------------------------- Methods -----------------------------------------------------------------------------
 
     /**
-     * Taking a screenshot of the current item.
-     * @param outputType Return type BASE64, BYTES or FILE.
-     * @param imageFormat  Image format: BMP, EMF, WMF, GIF, JPEG, PNG, TIFF, EXIF, ICON.
-     * @param foreground  If the parameter is set to false, it allows you to take a screenshot of an object that is not in the foreground.
-     * @return Screenshot of the current item.
-     * @throws WebDriverException
-     */
-    public <X> X getScreenshot(OutputType<X> outputType, ImageFormat imageFormat, boolean foreground) throws WebDriverException {
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("id", this.getId());
-        parameters.put("format", imageFormat.toString());
-        parameters.put("foreground", foreground);
-
-        Response response = this.execute(ELEMENT_SCREENSHOT,parameters);
-
-        Object result = response.getValue();
-        String base64EncodedPng;
-        if (result instanceof String) {
-            base64EncodedPng = (String)result;
-            return outputType.convertFromBase64Png(base64EncodedPng);
-        } else if (result instanceof byte[]) {
-            base64EncodedPng = new String((byte[])((byte[])result));
-            return outputType.convertFromBase64Png(base64EncodedPng);
-        } else {
-            throw new RuntimeException(String.format("Unexpected result for %s command: %s", "screenshot", result == null ? "null" : result.getClass().getName() + " instance"));
-        }
-    }
-
-    /**
-     * Taking a screenshot of the current item.
-     * @param imageFormat Image format: BMP, EMF, WMF, GIF, JPEG, PNG, TIFF, EXIF, ICON.
-     * @return Screenshot file of the current item.
-     */
-    public File getScreenshotFile(ImageFormat imageFormat){
-        return getScreenshot(OutputType.FILE, imageFormat, true);
-    }
-
-    /**
-     * Taking a screenshot of the not foreground current item.
-     * @param imageFormat Image format: BMP, EMF, WMF, GIF, JPEG, PNG, TIFF, EXIF, ICON.
-     * @return Screenshot file of the current item.
-     */
-    public File getScreenshotFileNotForeground(ImageFormat imageFormat){
-        return getScreenshot(OutputType.FILE, imageFormat, false);
-    }
-
-    /**
-     * Taking a screenshot of the current item. Image format: PNG.
-     * @return Screenshot file of the current item.
-     */
-    public File getPngScreenshotFile(){
-        return getScreenshotFile(ImageFormat.PNG);
-    }
-
-    /**
-     * Taking a screenshot of the current item. Image format: JPEG.
-     * @return Screenshot file of the current item.
-     */
-    public File getJpegScreenshotFile(){
-        return getScreenshotFile(ImageFormat.JPEG);
-    }
-
-    /**
-     * Taking a screenshot of the not foreground current item. Image format: PNG.
-     * @return Screenshot file of the current item.
-     */
-    public File getPngScreenshotFileNotForeground(){
-        return getScreenshotFileNotForeground(ImageFormat.PNG);
-    }
-
-    /**
-     * Taking a screenshot of the not foreground current item. Image format: JPEG.
-     * @return Screenshot file of the current item.
-     */
-    public File getJpegScreenshotFileNotForeground(){
-        return getScreenshotFileNotForeground(ImageFormat.JPEG);
-    }
-
-    /**
-     * Taking a screenshot of the current item and save to file. Image format: PNG.
-     * @param file File path.
-     * @throws IOException
-     */
-    public void savePngScreenshotFile(String file) throws IOException {
-        FileUtils.copyFile(getPngScreenshotFile(), new File(file));
-    }
-
-    /**
-     * Taking a screenshot of the current item and save to file. Image format: JPEG.
-     * @param file File path.
-     * @throws IOException
-     */
-    public void saveJpegScreenshotFile(String file) throws IOException {
-        FileUtils.copyFile(getJpegScreenshotFile(), new File(file));
-    }
-
-    /**
-     * Taking a screenshot of the not foreground current item and save to file. Image format: PNG.
-     * @param file File path.
-     * @throws IOException
-     */
-    public void savePngScreenshotFileNotForeground(String file) throws IOException {
-        FileUtils.copyFile(getPngScreenshotFileNotForeground(), new File(file));
-    }
-
-    /**
-     * Taking a screenshot of the not foreground current item and save to file. Image format: JPEG.
-     * @param file File path.
-     * @throws IOException
-     */
-    public void saveJpegScreenshotFileNotForeground(String file) throws IOException {
-        FileUtils.copyFile(getJpegScreenshotFileNotForeground(), new File(file));
-    }
-
-
-    /**
-     * Drags and drops the mouse from the starting point (Base point of element bounding rectangle + x, y coordinates)
-     * with the given distance.
+     * Getting the "Name" attribute of an element.
      *
-     * @param basePoint {@link BasePoint} of element bounding rectangle.
-     * @param x X Coordinate relative to base point of element bounding rectangle.
-     * @param y Y Coordinate relative to base point of element bounding rectangle.
-     * @param dx The x distance to drag and drop, + for right, - for left.
-     * @param dy The y distance to drag and drop, + for down, - for up.
+     * @return The "Name" attribute of the current element.
      */
-    public void dragAndDrop(BasePoint basePoint, int x, int y, int dx, int dy) {
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
-
-        parameters.put("id", this.getId());
-        parameters.put("x", x);
-        parameters.put("y", y);
-        parameters.put("dx", dx);
-        parameters.put("dy", dy);
-        parameters.put("basePoint", basePoint.toString());
-
-        this.execute(ELEMENT_DRAG_AND_DROP, parameters);
+    public String getName() {
+        return this.getAttribute("Name");
     }
 
     /**
-     * Move the mouse to the point (Base point of element bounding rectangle + x, y coordinates).
+     * Get the active window.
      *
-     * @param basePoint {@link BasePoint} of element bounding rectangle.
-     * @param x X Coordinate relative to base point of element bounding rectangle.
-     * @param y Y Coordinate relative to base point of element bounding rectangle.
+     * @return The active window.
      */
-    public void mouseMove(BasePoint basePoint, int x, int y) {
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
-
-        parameters.put("id", this.getId());
-        parameters.put("x", x);
-        parameters.put("y", y);
-        parameters.put("basePoint", basePoint.toString());
-        parameters.put("action", "move");
-
-        this.execute(ELEMENT_MOUSE_ACTION, parameters);
+    public Window getActiveWindow() {
+        Response response = callVoidCommand(WINDOW_GET_ACTIVE_WINDOW);
+        return new Window(createRemoteWebElementFromResponse(response));
     }
 
     /**
-     * Click the mouse on the point (Base point of element bounding rectangle + x, y coordinates).
+     * Get Bounding Rectangle of element.
      *
-     * @param basePoint {@link BasePoint} of element bounding rectangle.
-     * @param x X Coordinate relative to base point of element bounding rectangle.
-     * @param y Y Coordinate relative to base point of element bounding rectangle.
+     * @return Rectangle instance.
      */
-    public void mouseClick(BasePoint basePoint, int x, int y) {
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
+    public Rectangle getElementRect() {
+        String rectString = this.getAttribute("BoundingRectangle");
+        String[] rect = rectString.split(",");
+        return new Rectangle(Integer.parseInt(rect[0].trim()), Integer.parseInt(rect[1].trim())
+                , Integer.parseInt(rect[3].trim()), Integer.parseInt(rect[2].trim()));
+    }
 
+    /**
+     * Sets the current element as the root element of the driver.
+     */
+    public void setAsRootElement(){
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("type", "element");
         parameters.put("id", this.getId());
-        parameters.put("x", x);
-        parameters.put("y", y);
-        parameters.put("basePoint", basePoint.toString());
-        parameters.put("action", "click");
+        this.execute(SET_ROOT_ELEMENT, parameters);
+    }
 
-        this.execute(ELEMENT_MOUSE_ACTION, parameters);
+    // --------------------------- Actions -----------------------------------------------------------------------------
+
+    /**
+     * Get Mouse Actions instance.
+     *
+     * @return MouseActions instance.
+     */
+    public ElementMouseActions mouseActions() {
+        return new ElementMouseActions(this);
+    }
+
+    /**
+     * Get Touch Actions instance.
+     *
+     * @return Touch Actions instance.
+     */
+    public TouchActions touchActions() {
+        return new TouchActions(this);
+    }
+
+    /**
+     * Get Screenshot Actions of current item.
+     *
+     * @return ScreenshotActions instance.
+     */
+    public ScreenshotActions screenshotActions() {
+        return new ScreenshotActions(this);
+    }
+
+    // --------------------------- Cast --------------------------------------------------------------------------------
+
+    /**
+     * Cast DesktopElement to a Typed Element.
+     *
+     * @return WebElementExtensions instance.
+     */
+    public WebElementCast castTo() {
+        return new WebElementCast(this);
     }
 
 
     /**
-     * Right click the mouse on the point (Base point of element bounding rectangle + x, y coordinates).
+     * Cast DesktopElement to a Coordinate Element.
      *
-     * @param basePoint {@link BasePoint} of element bounding rectangle.
-     * @param x X Coordinate relative to base point of element bounding rectangle.
-     * @param y Y Coordinate relative to base point of element bounding rectangle.
+     * @return WebElementExtensions instance.
      */
-    public void mouseRightClick(BasePoint basePoint, int x, int y) {
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
-
-        parameters.put("id", this.getId());
-        parameters.put("x", x);
-        parameters.put("y", y);
-        parameters.put("basePoint", basePoint.toString());
-        parameters.put("action", "rightClick");
-
-        this.execute(ELEMENT_MOUSE_ACTION, parameters);
+    public CoordinateElement toCoordinateElement() {
+        Rectangle rectangle = getElementRect();
+        return new CoordinateElement(this, BasePoint.TOP_LEFT, 0, 0, rectangle.getWidth(), rectangle.getHeight());
     }
 
 
-    /**
-     * Double click the mouse on the point (Base point of element bounding rectangle + x, y coordinates).
-     *
-     * @param basePoint {@link BasePoint} of element bounding rectangle.
-     * @param x X Coordinate relative to base point of element bounding rectangle.
-     * @param y Y Coordinate relative to base point of element bounding rectangle.
-     */
-    public void mouseDoubleClick(BasePoint basePoint, int x, int y) {
-        HashMap<String, Object> parameters = new HashMap<String, Object>();
-
-        parameters.put("id", this.getId());
-        parameters.put("x", x);
-        parameters.put("y", y);
-        parameters.put("basePoint", basePoint.toString());
-        parameters.put("action", "doubleClick");
-
-        this.execute(ELEMENT_MOUSE_ACTION, parameters);
-    }
 }

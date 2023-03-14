@@ -3,6 +3,7 @@ import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class to manage options specific to {@link FlaNiumDriver}
@@ -10,72 +11,84 @@ import java.util.HashMap;
 public class DesktopOptions implements FlaNiumOptions {
     private static final String APPLICATION_PATH_OPTION = "app";
     private static final String ARGUMENTS_OPTION = "args";
-    private static final String DEBUG_CONNECT_TO_RUNNING_APP_OPTION = "debugConnectToRunningApp";
-    private static final String INNER_PORT_OPTION = "innerPort";
+    private static final String CONNECT_TO_RUNNING_APP_OPTION = "connectToRunningApp";
     private static final String LAUNCH_DELAY_OPTION = "launchDelay";
+    private static final String PROCESS_FIND_TIMEOUT = "processFindTimeOut";
     private static final String PROCESS_NAME_OPTION = "processName";
     private static final String INJECTION_ACTIVATE = "injectionActivate";
-    private static final String APP_TYPE = "appType";
+    private static final String INJECTION_DLL_TYPE = "injectionDllType";
     private static final String RESPONSE_TIMEOUT = "responseTimeout";
 
     private String applicationPath;
     private String arguments;
-    private Boolean debugConnectToRunningApp;
-    private Integer innerPort;
+    private Boolean connectToRunningApp;
     private Integer launchDelay;
+    private Integer processFindTimeOut;
     private String processName;
     private Boolean injectionActivate;
-    private String appType;
+    private String injectionDllType;
     private Integer responseTimeout;
 
+
     /**
-     * Sets the absolute local path to an .exe file to be started.
-     * This capability is not required if debugConnectToRunningApp is specified.
-     * @param applicationPath Absolute local path to an .exe file to be started.
+     * Sets the absolute path to an .exe file to be started.
+     * @param applicationPath Absolute path to an .exe file to be started.
      */
-    public void setApplicationPath(String applicationPath) {
+    public DesktopOptions setApplicationPath(String applicationPath) {
         this.applicationPath = applicationPath;
+        return this;
     }
 
     /**
-     * Sets startup argunments of the application under test.
-     * @param arguments Startup argunments of the application under test.
+     * Sets startup arguments of the application under test.
+     * @param arguments Startup arguments of the application under test.
      */
-    public void setArguments(String arguments) {
+    public DesktopOptions setArguments(String arguments) {
         this.arguments = arguments;
+        return this;
     }
 
     /**
-     * Sets a value indicating whether debug connect to running app.
-     * If true, then application starting step are skipped.
-     * @param debugConnectToRunningApp Value indicating whether debug connect to running app.
+     * If false (default) - always starts a new application process (with closing the current one, if any).
+     * <p>
+     * If true and the application is not running, then starts the application.
+     * <p>
+     * If true and the application is running, then it simply uses the current state of the application.
+     * <p>
+     * Also, if true - then the application does not close when the session ends.
+     *
+     * @param connectToRunningApp An option that allows you to connect to a previously launched application.
      */
-    public void setDebugConnectToRunningApp(Boolean debugConnectToRunningApp) {
-        this.debugConnectToRunningApp = debugConnectToRunningApp;
-    }
-
-    /**
-     * Sets the inner port.
-     * @param innerPort inner port.
-     */
-    public void setInnerPort(Integer innerPort) {
-        this.innerPort = innerPort;
+    public DesktopOptions setConnectToRunningApp(Boolean connectToRunningApp) {
+        this.connectToRunningApp = connectToRunningApp;
+        return this;
     }
 
     /**
      * Sets the launch delay in milliseconds, to be waited to let visuals to initialize after application started.
-     * @param launchDelay Launch delay in milliseconds
+     * @param launchDelay Launch delay in milliseconds.
      */
-    public void setLaunchDelay(Integer launchDelay) {
+    public DesktopOptions setLaunchDelay(Integer launchDelay) {
         this.launchDelay = launchDelay;
+        return this;
+    }
+
+    /**
+     * Sets the search time for the application process specified in the processName parameter.
+     * @param processFindTimeOut Process lookup timeout in milliseconds.
+     */
+    public DesktopOptions setProcessFindTimeOut(Integer processFindTimeOut) {
+        this.processFindTimeOut = processFindTimeOut;
+        return this;
     }
 
     /**
      * Setting the name of the application process. It is used in cases when the process id changes after starting the application.
      * @param processName process name of the main window of the application.
      */
-    public void setProcessName(String processName) {
+    public DesktopOptions setProcessName(String processName) {
         this.processName = processName;
+        return this;
     }
 
     /**
@@ -83,17 +96,18 @@ public class DesktopOptions implements FlaNiumOptions {
      * Need EXTENDED version of FlaNium Driver.
      * @param injectionActivate Activate injection technology
      */
-    public void setInjectionActivate(Boolean injectionActivate){
+    public DesktopOptions setInjectionActivate(Boolean injectionActivate){
         this.injectionActivate = injectionActivate;
+        return this;
     }
 
     /**
-     * Set type of application. Use with InjectionActivate.
-     * Need EXTENDED version of FlaNium Driver.
-     * @param appType Type of application.
+     * Set type of DLL for inject. Use with InjectionActivate.
+     * @param injectionDllType Type of Dll.
      */
-    public void setAppType(AppType appType){
-        this.appType = appType.toString();
+    public DesktopOptions setInjectionDllType(String injectionDllType){
+        this.injectionDllType = injectionDllType;
+        return this;
     }
 
     /**
@@ -101,8 +115,9 @@ public class DesktopOptions implements FlaNiumOptions {
      * If no response is received from the Win API within this time, an exception will be thrown.
      * @param responseTimeout response timeout in milliseconds.
      */
-    public void setResponseTimeout(Integer responseTimeout){
+    public DesktopOptions setResponseTimeout(Integer responseTimeout){
         this.responseTimeout = responseTimeout;
+        return this;
     }
 
 
@@ -110,24 +125,25 @@ public class DesktopOptions implements FlaNiumOptions {
      * Convert options to DesiredCapabilities for FlaNium Desktop Driver
      * @return The DesiredCapabilities for FlaNium Desktop Driver with these options.
      */
+    @Override
     public Capabilities toCapabilities() {
-        HashMap<String, Object> capabilityDictionary = new HashMap<String, Object>();
+        Map<String, Object> capabilityDictionary = new HashMap<>();
         capabilityDictionary.put(APPLICATION_PATH_OPTION, applicationPath);
 
         if ((arguments != null) && (arguments.length() > 0)) {
             capabilityDictionary.put(ARGUMENTS_OPTION, arguments);
         }
 
-        if (debugConnectToRunningApp != null) {
-            capabilityDictionary.put(DEBUG_CONNECT_TO_RUNNING_APP_OPTION, debugConnectToRunningApp);
-        }
-
-        if (innerPort != null) {
-            capabilityDictionary.put(INNER_PORT_OPTION, innerPort);
+        if (connectToRunningApp != null) {
+            capabilityDictionary.put(CONNECT_TO_RUNNING_APP_OPTION, connectToRunningApp);
         }
 
         if (launchDelay != null) {
             capabilityDictionary.put(LAUNCH_DELAY_OPTION, launchDelay);
+        }
+
+        if (processFindTimeOut != null) {
+            capabilityDictionary.put(PROCESS_FIND_TIMEOUT, processFindTimeOut);
         }
 
         if (processName != null) {
@@ -138,8 +154,8 @@ public class DesktopOptions implements FlaNiumOptions {
             capabilityDictionary.put(INJECTION_ACTIVATE, injectionActivate);
         }
 
-        if (appType != null) {
-            capabilityDictionary.put(APP_TYPE, appType);
+        if (injectionDllType != null) {
+            capabilityDictionary.put(INJECTION_DLL_TYPE, injectionDllType);
         }
 
         if (responseTimeout != null) {
@@ -149,7 +165,4 @@ public class DesktopOptions implements FlaNiumOptions {
         return new DesiredCapabilities(capabilityDictionary);
     }
 
-    public enum AppType{
-        DELPHI;
-    }
 }

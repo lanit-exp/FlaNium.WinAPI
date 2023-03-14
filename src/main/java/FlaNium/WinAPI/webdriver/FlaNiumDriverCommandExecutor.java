@@ -1,6 +1,6 @@
 package FlaNium.WinAPI.webdriver;
+import FlaNium.WinAPI.exceptions.FlaNiumDriverException;
 import com.google.common.base.Throwables;
-import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.remote.*;
 import org.openqa.selenium.remote.http.HttpMethod;
 import org.openqa.selenium.remote.service.DriverCommandExecutor;
@@ -601,6 +601,18 @@ public class FlaNiumDriverCommandExecutor extends HttpCommandExecutor {
         FLANIUM_COMMAND_NAME_TO_URL.put("touchActionsRotate",
                 new CommandInfo("/session/:sessionId/touchActionsRotate", HttpMethod.POST));
 
+        FLANIUM_COMMAND_NAME_TO_URL.put("actions",
+                new CommandInfo("/session/:sessionId/actions", HttpMethod.POST));
+
+        FLANIUM_COMMAND_NAME_TO_URL.put("setRootElement",
+                new CommandInfo("/session/:sessionId/setRootElement", HttpMethod.POST));
+
+        FLANIUM_COMMAND_NAME_TO_URL.put("changeProcess",
+                new CommandInfo("/session/:sessionId/changeProcess", HttpMethod.POST));
+
+        FLANIUM_COMMAND_NAME_TO_URL.put("killProcesses",
+                new CommandInfo("/session/:sessionId/killProcesses", HttpMethod.POST));
+
         //endregion
 
     }
@@ -630,10 +642,10 @@ public class FlaNiumDriverCommandExecutor extends HttpCommandExecutor {
             Throwable rootCause = Throwables.getRootCause(t);
             if (rootCause instanceof ConnectException && "Connection refused".equals(rootCause.getMessage()) &&
                     ((service == null) || (!service.isRunning()))) {
-                throw new WebDriverException("The driver server has unexpectedly died!", t);
+                throw new FlaNiumDriverException("The driver server has unexpectedly died!", t);
             }
             Throwables.throwIfUnchecked(t);
-            throw new WebDriverException(t);
+            throw new FlaNiumDriverException(t);
         } finally {
             if ((service != null) && (DriverCommand.QUIT.equals(command.getName()))) {
                 service.stop();
