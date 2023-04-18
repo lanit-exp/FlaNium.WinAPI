@@ -87,7 +87,14 @@ public class FlaNium {
 
         DesktopOptions options = new DesktopOptions();
 
-        if (notNullAndEmpty(app)) options.setApplicationPath(new File(app).getAbsolutePath());
+        if (notNullAndEmpty(app)) {
+            String os = System.getProperty("os.name");
+            if (os != null && os.toLowerCase().contains("win")) {
+                app = new File(app).getAbsolutePath();
+            }
+            options.setApplicationPath(app);
+        }
+
         if (notNullAndEmpty(args)) options.setArguments(args);
         if (notNullAndEmpty(connectToRunningApp)) options.setConnectToRunningApp(Boolean.parseBoolean(connectToRunningApp));
         if (notNullAndEmpty(launchDelay)) options.setLaunchDelay(Integer.parseInt(launchDelay) * 1000);
