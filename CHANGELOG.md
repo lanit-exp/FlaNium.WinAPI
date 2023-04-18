@@ -1,5 +1,11 @@
 ## Changelog
 
+### 2.0.1 (2023-04-18)
+
+#### Bug fixes
+* Fix application path initialization error when running on UNIX OS (using FlaNium.initDriver() method). 
+
+
 ### 2.0.0-beta (2023-03-14)
 
 
