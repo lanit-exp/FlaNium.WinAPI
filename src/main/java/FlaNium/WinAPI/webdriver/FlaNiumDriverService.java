@@ -50,7 +50,6 @@ public class FlaNiumDriverService extends DriverService {
         @Override
         public Builder usingDriverExecutable(File file) {
             checkNotNull(file);
-            checkExecutable(file);
             this.exe = file;
             return this;
         }
@@ -130,10 +129,9 @@ public class FlaNiumDriverService extends DriverService {
             return createDriverService(exe, port, timeout, createArgs(), ImmutableMap.of());
         }
 
-
         @Override
-        protected File findDefaultExecutable() {
-            return null;
+        protected void loadSystemProperties() {
+
         }
 
         @Override

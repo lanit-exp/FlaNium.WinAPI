@@ -1,5 +1,11 @@
 ## Changelog
 
+### 2.1.0 (2023-07-05)
+
+#### Enhancements
+* Added w3c standard support (selenium 4.10).
+
+
 ### 2.0.1 (2023-04-18)
 
 #### Bug fixes
