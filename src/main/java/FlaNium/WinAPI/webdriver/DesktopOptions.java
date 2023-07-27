@@ -2,6 +2,7 @@ package FlaNium.WinAPI.webdriver;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -162,7 +163,7 @@ public class DesktopOptions implements FlaNiumOptions {
             capabilityDictionary.put(RESPONSE_TIMEOUT, responseTimeout);
         }
 
-        return new DesiredCapabilities(capabilityDictionary);
+        return new DesiredCapabilities(Collections.singletonMap("flanium:capabilities", capabilityDictionary));
     }
 
 }
