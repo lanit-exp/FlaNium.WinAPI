@@ -26,6 +26,9 @@ public class FlaNiumDriverCommandExecutor extends HttpCommandExecutor {
         FLANIUM_COMMAND_NAME_TO_URL.put("executeInApp",
                 new CommandInfo("/session/:sessionId/executeInApp", HttpMethod.POST));
 
+        FLANIUM_COMMAND_NAME_TO_URL.put("elementAttribute",
+                new CommandInfo("/session/:sessionId/element/:id/attribute/:value", HttpMethod.GET));
+
         //region ComboBox
         FLANIUM_COMMAND_NAME_TO_URL.put("comboBoxCollapse",
                 new CommandInfo("/session/:sessionId/element/:id/combobox/collapse", HttpMethod.POST));

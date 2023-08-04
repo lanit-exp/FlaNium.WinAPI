@@ -23,6 +23,7 @@ public class DesktopElement extends RemoteWebElement {
 
     private static final String WINDOW_GET_ACTIVE_WINDOW = "windowGetActiveWindow";
     private static final String SET_ROOT_ELEMENT = "setRootElement";
+    private static final String GET_ELEMENT_ATTRIBUTE = "elementAttribute";
 
 
     public DesktopElement(WebElement element) {
@@ -246,6 +247,17 @@ public class DesktopElement extends RemoteWebElement {
         parameters.put("type", "element");
         parameters.put("id", this.getId());
         this.execute(SET_ROOT_ELEMENT, parameters);
+    }
+
+    /**
+     * Get the value of an element attribute.
+     * @param name name of attribute.
+     * @return value of attribute.
+     */
+    @Override
+    public String getAttribute(String name) {
+        return callValueCommand(GET_ELEMENT_ATTRIBUTE, name).getValue().toString();
+
     }
 
     // --------------------------- Actions -----------------------------------------------------------------------------

@@ -40,7 +40,7 @@
         <dependency>
             <groupId>com.github.lanit-exp</groupId>
             <artifactId>FlaNium.WinAPI</artifactId>
-            <version>LATEST</version>
+            <version>2.2.0</version>
         </dependency>
         ...
 ```
@@ -187,10 +187,10 @@ driver.findElements(By.xpath("#//*");
 ### Расширение возможностей Selenium протокола
 
 >ВАЖНО! 
->Данная библиотека значительно расширяет возможности по взаимодействию с драйвером и тестируемым приложением, а также упрощает это взаимодействие. 
->Поэтому рекомендуется отказаться от работы со стандартным WebElement и WebDriver и использовать экземпляры DesktopElement и FlaNiumDriver.
-
->DesktopElement и FlaNiumDriver - два основных класса при работе с FlaNium драйвером.
+> Начиная с версии FlaNium.WinAPI-2.1 и с переходом селениума на W3C протокол, часть методов стандартного класса WebElement работает НЕКОРРЕКТНО,  
+> поэтому рекомендуется отказаться от работы со стандартным WebElement и WebDriver и использовать экземпляры классов DesktopElement и FlaNiumDriver.
+> 
+> DesktopElement и FlaNiumDriver - два основных класса при работе с FlaNium драйвером.
 
 
 Начиная с версии 2.0.0 появилась возможность приводить WebElement непосредственно к `DesktopElement` - основному узлу по взаимодействию с элементами. 

@@ -1,5 +1,11 @@
 ## Changelog
 
+### 2.2.0 (2023-08-04)
+
+#### Bug fixes
+* getAttribute method fixed
+
+
 ### 2.1.0 (2023-07-05)
 
 #### Enhancements
