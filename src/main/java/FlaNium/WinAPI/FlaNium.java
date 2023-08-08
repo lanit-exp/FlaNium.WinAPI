@@ -88,9 +88,11 @@ public class FlaNium {
         DesktopOptions options = new DesktopOptions();
 
         if (notNullAndEmpty(app)) {
-            String os = System.getProperty("os.name");
-            if (os != null && os.toLowerCase().contains("win")) {
-                app = new File(app).getAbsolutePath();
+            if (!app.contains("<")) {
+                String os = System.getProperty("os.name");
+                if (os != null && os.toLowerCase().contains("win")) {
+                    app = new File(app).getAbsolutePath();
+                }
             }
             options.setApplicationPath(app);
         }

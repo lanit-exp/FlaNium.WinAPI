@@ -1,6 +1,9 @@
 ## Changelog
 
-### 2.2.0 (2023-08-04)
+### 2.2.0 (2023-08-08)
+
+#### Enhancements
+* Added support for system variables in the application path
 
 #### Bug fixes
 * getAttribute method fixed
