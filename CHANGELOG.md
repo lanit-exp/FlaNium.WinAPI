@@ -1,9 +1,10 @@
 ## Changelog
 
-### 2.2.0 (2023-08-08)
+### 2.2.0 (2023-08-17)
 
 #### Enhancements
 * Added support for system variables in the application path
+* Added FileOrDirectoryExists and DeleteFileOrDirectory methods in FlaNiumDriver class.
 
 #### Bug fixes
 * getAttribute method fixed

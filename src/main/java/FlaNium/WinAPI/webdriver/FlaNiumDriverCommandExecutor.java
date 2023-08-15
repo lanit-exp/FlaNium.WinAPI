@@ -616,6 +616,11 @@ public class FlaNiumDriverCommandExecutor extends HttpCommandExecutor {
         FLANIUM_COMMAND_NAME_TO_URL.put("killProcesses",
                 new CommandInfo("/session/:sessionId/killProcesses", HttpMethod.POST));
 
+        FLANIUM_COMMAND_NAME_TO_URL.put("fileOrDirectoryExists",
+                new CommandInfo("/session/:sessionId/fileOrDirectoryExists", HttpMethod.POST));
+
+        FLANIUM_COMMAND_NAME_TO_URL.put("deleteFileOrDirectory",
+                new CommandInfo("/session/:sessionId/deleteFileOrDirectory", HttpMethod.POST));
         //endregion
 
     }

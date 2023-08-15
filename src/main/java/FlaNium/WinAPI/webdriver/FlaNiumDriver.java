@@ -20,6 +20,8 @@ public class FlaNiumDriver extends RemoteWebDriver {
     private static final String SET_ROOT_ELEMENT = "setRootElement";
     private static final String CHANGE_PROCESS = "changeProcess";
     private static final String KILL_PROCESSES = "killProcesses";
+    private static final String FILE_OR_DIRECTORY_EXISTS = "fileOrDirectoryExists";
+    private static final String DELETE_FILE_OR_DIRECTORY = "deleteFileOrDirectory";
 
 
     /**
@@ -160,6 +162,30 @@ public class FlaNiumDriver extends RemoteWebDriver {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("name", processName);
         this.execute(KILL_PROCESSES, parameters);
+    }
+
+    /**
+     * Checks if a file or folder exists at the specified path.
+     * @param path Path to folder or file. System variables are supported, for example: <br>
+     *             "&lt;LOCALAPPDATA&gt;/folder/file.exe"
+     */
+    public boolean fileOrDirectoryExists(String path){
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("path", path);
+        Response response = this.execute(FILE_OR_DIRECTORY_EXISTS, parameters);
+        return Boolean.parseBoolean(response.getValue().toString());
+    }
+
+    /**
+     * Deletes a file or folder at the specified path. <br>
+     * If an error occurs during deletion or the file or folder is missing, an exception is thrown.
+     * @param path Path to folder or file. System variables are supported, for example: <br>
+     *             "&lt;LOCALAPPDATA&gt;/folder/file.exe"
+     */
+    public void deleteFileOrDirectory(String path){
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("path", path);
+        this.execute(DELETE_FILE_OR_DIRECTORY, parameters);
     }
 
     // --------------------------- Actions -----------------------------------------------------------------------------

@@ -33,7 +33,10 @@ public class DesktopOptions implements FlaNiumOptions {
 
     /**
      * Sets the absolute path to an .exe file to be started.
-     * @param applicationPath Absolute path to an .exe file to be started.
+     * @param applicationPath Absolute path to an .exe file to be started. <br>
+     *                        System variables are supported, for example: <br>
+     *                        "&lt;LOCALAPPDATA&gt;/folder/file.exe"
+     *
      */
     public DesktopOptions setApplicationPath(String applicationPath) {
         this.applicationPath = applicationPath;
