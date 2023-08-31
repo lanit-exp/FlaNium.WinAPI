@@ -1,4 +1,5 @@
 package FlaNium.WinAPI.webdriver;
+
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
@@ -33,7 +34,10 @@ public class DesktopOptions implements FlaNiumOptions {
 
     /**
      * Sets the absolute path to an .exe file to be started.
-     * @param applicationPath Absolute path to an .exe file to be started.
+     *
+     * @param applicationPath Absolute path to an .exe file to be started. <br>
+     *                        System variables are supported, for example: <br>
+     *                        "&lt;LOCALAPPDATA&gt;/folder/file.exe"
      */
     public DesktopOptions setApplicationPath(String applicationPath) {
         this.applicationPath = applicationPath;
@@ -42,6 +46,7 @@ public class DesktopOptions implements FlaNiumOptions {
 
     /**
      * Sets startup arguments of the application under test.
+     *
      * @param arguments Startup arguments of the application under test.
      */
     public DesktopOptions setArguments(String arguments) {
@@ -67,6 +72,7 @@ public class DesktopOptions implements FlaNiumOptions {
 
     /**
      * Sets the launch delay in milliseconds, to be waited to let visuals to initialize after application started.
+     *
      * @param launchDelay Launch delay in milliseconds.
      */
     public DesktopOptions setLaunchDelay(Integer launchDelay) {
@@ -76,6 +82,7 @@ public class DesktopOptions implements FlaNiumOptions {
 
     /**
      * Sets the search time for the application process specified in the processName parameter.
+     *
      * @param processFindTimeOut Process lookup timeout in milliseconds.
      */
     public DesktopOptions setProcessFindTimeOut(Integer processFindTimeOut) {
@@ -85,6 +92,7 @@ public class DesktopOptions implements FlaNiumOptions {
 
     /**
      * Setting the name of the application process. It is used in cases when the process id changes after starting the application.
+     *
      * @param processName process name of the main window of the application.
      */
     public DesktopOptions setProcessName(String processName) {
@@ -95,18 +103,20 @@ public class DesktopOptions implements FlaNiumOptions {
     /**
      * Using injection technology to access application data.
      * Need EXTENDED version of FlaNium Driver.
+     *
      * @param injectionActivate Activate injection technology
      */
-    public DesktopOptions setInjectionActivate(Boolean injectionActivate){
+    public DesktopOptions setInjectionActivate(Boolean injectionActivate) {
         this.injectionActivate = injectionActivate;
         return this;
     }
 
     /**
      * Set type of DLL for inject. Use with InjectionActivate.
+     *
      * @param injectionDllType Type of Dll.
      */
-    public DesktopOptions setInjectionDllType(String injectionDllType){
+    public DesktopOptions setInjectionDllType(String injectionDllType) {
         this.injectionDllType = injectionDllType;
         return this;
     }
@@ -114,9 +124,10 @@ public class DesktopOptions implements FlaNiumOptions {
     /**
      * Setting the response timeout.
      * If no response is received from the Win API within this time, an exception will be thrown.
+     *
      * @param responseTimeout response timeout in milliseconds.
      */
-    public DesktopOptions setResponseTimeout(Integer responseTimeout){
+    public DesktopOptions setResponseTimeout(Integer responseTimeout) {
         this.responseTimeout = responseTimeout;
         return this;
     }
@@ -124,46 +135,60 @@ public class DesktopOptions implements FlaNiumOptions {
 
     /**
      * Convert options to DesiredCapabilities for FlaNium Desktop Driver
+     *
      * @return The DesiredCapabilities for FlaNium Desktop Driver with these options.
      */
     @Override
     public Capabilities toCapabilities() {
         Map<String, Object> capabilityDictionary = new HashMap<>();
-        capabilityDictionary.put(APPLICATION_PATH_OPTION, applicationPath);
 
-        if ((arguments != null) && (arguments.length() > 0)) {
+        if (notNullAndNotEmpty(applicationPath)) {
+            capabilityDictionary.put(APPLICATION_PATH_OPTION, applicationPath);
+        }
+
+        if (notNullAndNotEmpty(arguments)) {
             capabilityDictionary.put(ARGUMENTS_OPTION, arguments);
         }
 
-        if (connectToRunningApp != null) {
+        if (notNull(connectToRunningApp)) {
             capabilityDictionary.put(CONNECT_TO_RUNNING_APP_OPTION, connectToRunningApp);
         }
 
-        if (launchDelay != null) {
+        if (notNullAndNotNegative(launchDelay)) {
             capabilityDictionary.put(LAUNCH_DELAY_OPTION, launchDelay);
         }
 
-        if (processFindTimeOut != null) {
+        if (notNullAndNotNegative(processFindTimeOut)) {
             capabilityDictionary.put(PROCESS_FIND_TIMEOUT, processFindTimeOut);
         }
 
-        if (processName != null) {
+        if (notNullAndNotEmpty(processName)) {
             capabilityDictionary.put(PROCESS_NAME_OPTION, processName);
         }
 
-        if (injectionActivate != null) {
+        if (notNull(injectionActivate)) {
             capabilityDictionary.put(INJECTION_ACTIVATE, injectionActivate);
         }
 
-        if (injectionDllType != null) {
+        if (notNullAndNotEmpty(injectionDllType)) {
             capabilityDictionary.put(INJECTION_DLL_TYPE, injectionDllType);
         }
 
-        if (responseTimeout != null) {
+        if (notNullAndNotNegative(responseTimeout)) {
             capabilityDictionary.put(RESPONSE_TIMEOUT, responseTimeout);
         }
 
         return new DesiredCapabilities(Collections.singletonMap("flanium:capabilities", capabilityDictionary));
+    }
+
+    private static boolean notNullAndNotEmpty(String value) {
+        return !(value == null || value.isEmpty());
+    }
+    private static boolean notNull(Boolean value) {
+        return value != null;
+    }
+    private static boolean notNullAndNotNegative(Integer value) {
+        return value != null && value >= 0;
     }
 
 }

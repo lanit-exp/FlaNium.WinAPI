@@ -26,6 +26,9 @@ public class FlaNiumDriverCommandExecutor extends HttpCommandExecutor {
         FLANIUM_COMMAND_NAME_TO_URL.put("executeInApp",
                 new CommandInfo("/session/:sessionId/executeInApp", HttpMethod.POST));
 
+        FLANIUM_COMMAND_NAME_TO_URL.put("elementAttribute",
+                new CommandInfo("/session/:sessionId/element/:id/attribute/:value", HttpMethod.GET));
+
         //region ComboBox
         FLANIUM_COMMAND_NAME_TO_URL.put("comboBoxCollapse",
                 new CommandInfo("/session/:sessionId/element/:id/combobox/collapse", HttpMethod.POST));
@@ -613,6 +616,14 @@ public class FlaNiumDriverCommandExecutor extends HttpCommandExecutor {
         FLANIUM_COMMAND_NAME_TO_URL.put("killProcesses",
                 new CommandInfo("/session/:sessionId/killProcesses", HttpMethod.POST));
 
+        FLANIUM_COMMAND_NAME_TO_URL.put("fileOrDirectoryExists",
+                new CommandInfo("/session/:sessionId/fileOrDirectoryExists", HttpMethod.POST));
+
+        FLANIUM_COMMAND_NAME_TO_URL.put("deleteFileOrDirectory",
+                new CommandInfo("/session/:sessionId/deleteFileOrDirectory", HttpMethod.POST));
+
+        FLANIUM_COMMAND_NAME_TO_URL.put("startApp",
+                new CommandInfo("/session/:sessionId/startApp", HttpMethod.POST));
         //endregion
 
     }

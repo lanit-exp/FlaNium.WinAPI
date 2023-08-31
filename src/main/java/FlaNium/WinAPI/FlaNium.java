@@ -17,26 +17,38 @@ public class FlaNium {
 
 
     public static FlaNiumDriver initDriver() {
-        PropertyLoader.loadProperties();
-        return getDriver();
+        PropertyLoader.loadDriverProperties();
+        PropertyLoader.loadAppProperties();
+        return getDriver(getOptions());
     }
 
     public static FlaNiumDriver initDriver(String appPropertyName) {
-        PropertyLoader.loadProperties(appPropertyName);
-        return getDriver();
+        PropertyLoader.loadDriverProperties();
+        PropertyLoader.loadAppProperties(appPropertyName);
+        return getDriver(getOptions());
     }
 
-    private static FlaNiumDriver getDriver() {
-        if (isRemote()) return getRemoteDriver();
-        else return getLocalDriver();
+    public static FlaNiumDriver initDriverWithoutStartApp() {
+        PropertyLoader.loadDriverProperties();
+        return getDriver(new DesktopOptions());
     }
 
-    private static FlaNiumDriver getLocalDriver() {
-        return new FlaNiumDriver(getService(), getOptions());
+    public static FlaNiumDriver initDriverWithoutStartApp(int responseTimeoutMs) {
+        PropertyLoader.loadDriverProperties();
+        return getDriver(new DesktopOptions().setResponseTimeout(responseTimeoutMs));
     }
 
-    private static FlaNiumDriver getRemoteDriver() {
-        return new FlaNiumDriver(getUrl(), getOptions());
+    private static FlaNiumDriver getDriver(FlaNiumOptions options) {
+        if (isRemote()) return getRemoteDriver(options);
+        else return getLocalDriver(options);
+    }
+
+    private static FlaNiumDriver getLocalDriver(FlaNiumOptions options) {
+        return new FlaNiumDriver(getService(), options);
+    }
+
+    private static FlaNiumDriver getRemoteDriver(FlaNiumOptions options) {
+        return new FlaNiumDriver(getUrl(), options);
     }
 
     private static boolean isRemote() {
@@ -64,12 +76,12 @@ public class FlaNium {
 
         FlaNiumDriverService.Builder builder = new FlaNiumDriverService.Builder();
 
-        if (notNullAndEmpty(exe)) builder.usingDriverExecutable(new File(exe).getAbsoluteFile());
-        if (notNullAndEmpty(port)) builder.usingPort(Integer.parseInt(port));
-        if (notNullAndEmpty(verbose)) builder.withVerbose(Boolean.parseBoolean(verbose));
-        if (notNullAndEmpty(silent)) builder.withSilent(Boolean.parseBoolean(silent));
-        if (notNullAndEmpty(timeout)) builder.withTimeout(Duration.ofSeconds(Integer.parseInt(timeout)));
-        if (notNullAndEmpty(logFile)) builder.withLogFile(new File(logFile).getAbsoluteFile());
+        if (notNullAndNotEmpty(exe)) builder.usingDriverExecutable(new File(exe).getAbsoluteFile());
+        if (notNullAndNotEmpty(port)) builder.usingPort(Integer.parseInt(port));
+        if (notNullAndNotEmpty(verbose)) builder.withVerbose(Boolean.parseBoolean(verbose));
+        if (notNullAndNotEmpty(silent)) builder.withSilent(Boolean.parseBoolean(silent));
+        if (notNullAndNotEmpty(timeout)) builder.withTimeout(Duration.ofSeconds(Integer.parseInt(timeout)));
+        if (notNullAndNotEmpty(logFile)) builder.withLogFile(new File(logFile).getAbsoluteFile());
 
         return builder.build();
     }
@@ -84,25 +96,26 @@ public class FlaNium {
         String injectionActivate = System.getProperty(PropertyList.App.INJECTION_ACTIVATE.getValue());
         String injectionDllType = System.getProperty(PropertyList.App.INJECTION_DLL_TYPE.getValue());
         String responseTimeout = System.getProperty(PropertyList.App.APP_RESPONSE_TIMEOUT.getValue());
-
         DesktopOptions options = new DesktopOptions();
 
-        if (notNullAndEmpty(app)) {
-            String os = System.getProperty("os.name");
-            if (os != null && os.toLowerCase().contains("win")) {
-                app = new File(app).getAbsolutePath();
+        if (notNullAndNotEmpty(app)) {
+            if (!app.contains("<")) {
+                String os = System.getProperty("os.name");
+                if (os != null && os.toLowerCase().contains("win")) {
+                    app = new File(app).getAbsolutePath();
+                }
             }
             options.setApplicationPath(app);
         }
 
-        if (notNullAndEmpty(args)) options.setArguments(args);
-        if (notNullAndEmpty(connectToRunningApp)) options.setConnectToRunningApp(Boolean.parseBoolean(connectToRunningApp));
-        if (notNullAndEmpty(launchDelay)) options.setLaunchDelay(Integer.parseInt(launchDelay) * 1000);
-        if (notNullAndEmpty(processFindTimeOut)) options.setProcessFindTimeOut(Integer.parseInt(processFindTimeOut) * 1000);
-        if (notNullAndEmpty(processName)) options.setProcessName(processName);
-        if (notNullAndEmpty(injectionActivate)) options.setInjectionActivate(Boolean.parseBoolean(injectionActivate));
-        if (notNullAndEmpty(injectionDllType)) options.setInjectionDllType(injectionDllType);
-        if (notNullAndEmpty(responseTimeout)) options.setResponseTimeout(Integer.parseInt(responseTimeout) * 1000);
+        if (notNullAndNotEmpty(args)) options.setArguments(args);
+        if (notNullAndNotEmpty(connectToRunningApp)) options.setConnectToRunningApp(Boolean.parseBoolean(connectToRunningApp));
+        if (notNullAndNotEmpty(launchDelay)) options.setLaunchDelay(Integer.parseInt(launchDelay) * 1000);
+        if (notNullAndNotEmpty(processFindTimeOut)) options.setProcessFindTimeOut(Integer.parseInt(processFindTimeOut) * 1000);
+        if (notNullAndNotEmpty(processName)) options.setProcessName(processName);
+        if (notNullAndNotEmpty(injectionActivate)) options.setInjectionActivate(Boolean.parseBoolean(injectionActivate));
+        if (notNullAndNotEmpty(injectionDllType)) options.setInjectionDllType(injectionDllType);
+        if (notNullAndNotEmpty(responseTimeout)) options.setResponseTimeout(Integer.parseInt(responseTimeout) * 1000);
 
         return options;
     }
@@ -116,7 +129,7 @@ public class FlaNium {
         return property;
     }
 
-    private static boolean notNullAndEmpty(String value) {
+    private static boolean notNullAndNotEmpty(String value) {
         return !(value == null || value.isEmpty());
     }
 
