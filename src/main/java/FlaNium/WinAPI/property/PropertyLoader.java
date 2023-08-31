@@ -39,11 +39,11 @@ public class PropertyLoader {
 
 
         fileProp.forEach((k, v) -> {
-            if(!System.getProperties().containsKey(k.toString())) System.setProperty(k.toString(), v.toString());
+            if (!System.getProperties().containsKey(k.toString())) System.setProperty(k.toString(), v.toString());
         });
     }
 
-    private static void loadAppProperties(String appProperty) {
+    public static void loadAppProperties(String appProperty) {
         Properties fileProp = loadPropertiesFromFile(appProperty);
 
         String wrongProperties = fileProp.keySet().stream()
@@ -56,18 +56,16 @@ public class PropertyLoader {
 
 
         fileProp.forEach((k, v) -> {
-            if(!System.getProperties().containsKey(k.toString())) System.setProperty(k.toString(), v.toString());
+            if (!System.getProperties().containsKey(k.toString())) System.setProperty(k.toString(), v.toString());
         });
     }
 
-    public static void loadProperties(){
+    public static void loadDriverProperties() {
         loadDriverProperties(DEFAULT_DRIVER_PROPERTY);
-        loadAppProperties(DEFAULT_APP_PROPERTY);
     }
 
-    public static void loadProperties(String appProperty){
-        loadDriverProperties(DEFAULT_DRIVER_PROPERTY);
-        loadAppProperties(appProperty);
+    public static void loadAppProperties() {
+        loadAppProperties(DEFAULT_APP_PROPERTY);
     }
 
 }

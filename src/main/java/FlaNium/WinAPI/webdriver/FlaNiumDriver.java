@@ -22,6 +22,7 @@ public class FlaNiumDriver extends RemoteWebDriver {
     private static final String KILL_PROCESSES = "killProcesses";
     private static final String FILE_OR_DIRECTORY_EXISTS = "fileOrDirectoryExists";
     private static final String DELETE_FILE_OR_DIRECTORY = "deleteFileOrDirectory";
+    private static final String START_APP = "startApp";
 
 
     /**
@@ -186,6 +187,22 @@ public class FlaNiumDriver extends RemoteWebDriver {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("path", path);
         this.execute(DELETE_FILE_OR_DIRECTORY, parameters);
+    }
+
+    /**
+     * Launches the application at the given path.
+     * @param appPath The absolute path to an .exe file to be started.
+     *                System variables are supported, for example: <br>
+     *                "&lt;LOCALAPPDATA&gt;/folder/file.exe"
+     * @param appArguments Startup arguments of the application. May be null.
+     * @param launchDelayMs Static timeout to start in ms.
+     */
+    public void startApp(String appPath, String appArguments, Integer launchDelayMs){
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("appPath", appPath);
+        if (appArguments != null) parameters.put("appArguments", appArguments);
+        parameters.put("launchDelay", launchDelayMs);
+        this.execute(START_APP, parameters);
     }
 
     // --------------------------- Actions -----------------------------------------------------------------------------
