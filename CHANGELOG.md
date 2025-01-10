@@ -1,5 +1,12 @@
 ## Changelog
 
+
+### 2.3.0 (2025-01-09)
+
+#### Enhancements
+* Added setElementFocus method in DesktopElement class.
+
+
 ### 2.2.0 (2023-08-31)
 
 #### Enhancements

@@ -24,6 +24,7 @@ public class DesktopElement extends RemoteWebElement {
     private static final String WINDOW_GET_ACTIVE_WINDOW = "windowGetActiveWindow";
     private static final String SET_ROOT_ELEMENT = "setRootElement";
     private static final String GET_ELEMENT_ATTRIBUTE = "elementAttribute";
+    private static final String SET_ELEMENT_FOCUS = "setElementFocus";
 
 
     public DesktopElement(WebElement element) {
@@ -259,6 +260,16 @@ public class DesktopElement extends RemoteWebElement {
         return callValueCommand(GET_ELEMENT_ATTRIBUTE, name).getValue().toString();
 
     }
+
+    /**
+     * Sets the window containing the given element to focus.
+     */
+    public void setElementFocus() {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("id", this.getId());
+        this.execute(SET_ELEMENT_FOCUS, parameters);
+    }
+
 
     // --------------------------- Actions -----------------------------------------------------------------------------
 
