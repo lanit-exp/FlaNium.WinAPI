@@ -3,6 +3,12 @@
 Также данная библиотека позволяет типизировать стандартный `Selenium WebElement` и привести его к компонентам тестируемого приложения, тем самым добавить дополнительные методы взаимодействия характерные определенному типу элемента. 
 
 
+<details><summary> Новое в версии 2.3.0 </summary>
+
+- Добавлен метод setElementFocus у класса DesktopElement - переводит окно, содержащее элемент в фокус.
+
+</details>
+
 <details><summary> Новое в версии 2.2.0 </summary>
 
 - Исправлены ошибки перехода на стандарт w3c.
@@ -59,7 +65,7 @@
         <dependency>
             <groupId>com.github.lanit-exp</groupId>
             <artifactId>FlaNium.WinAPI</artifactId>
-            <version>2.2.0</version>
+            <version>2.3.0</version>
         </dependency>
         ...
 ```
