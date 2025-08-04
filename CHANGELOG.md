@@ -1,6 +1,30 @@
 ## Changelog
 
 
+### 2.3.1 (2025-08-04)
+
+Updating library versions:
+  - java up to 11
+
+  - com.google.code.gson:gson up to 2.13.1
+
+  - org.seleniumhq.selenium:selenium-remote-driver up to 4.34.0
+
+  - org.seleniumhq.selenium:selenium-api up to 4.34.0
+
+  - org.apache.maven.plugins:maven-javadoc-plugin up to 3.11.2
+
+  - org.apache.maven.plugins:maven-release-plugin up to 3.1.1
+
+  - org.apache.maven.plugins:maven-compiler-plugin up to 3.14.0
+
+  - org.apache.maven.plugins:maven-source-plugin up to 3.3.1
+
+  - org.apache.maven.plugins:maven-gpg-plugin up to 3.2.8
+
+  - and updating versions of other libraries...
+
+
 ### 2.3.0 (2025-01-09)
 
 #### Enhancements
