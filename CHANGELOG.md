@@ -1,6 +1,11 @@
 ## Changelog
 
 
+### 2.4.0 (2025-11-19)
+
+  - Added downloadFile and uploadFile methods in FlaNiumDriver class.
+
+
 ### 2.3.1 (2025-08-04)
 
 Updating library versions:

@@ -4,13 +4,18 @@ import FlaNium.WinAPI.actions.KeyboardActions;
 import FlaNium.WinAPI.actions.MouseActions;
 import FlaNium.WinAPI.actions.ScreenshotActions;
 import FlaNium.WinAPI.actions.TouchActions;
+import FlaNium.WinAPI.exceptions.FlaNiumDriverException;
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.remote.Response;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,6 +27,8 @@ public class FlaNiumDriver extends RemoteWebDriver {
     private static final String KILL_PROCESSES = "killProcesses";
     private static final String FILE_OR_DIRECTORY_EXISTS = "fileOrDirectoryExists";
     private static final String DELETE_FILE_OR_DIRECTORY = "deleteFileOrDirectory";
+    private static final String FILE_DOWNLOAD = "fileDownload";
+    private static final String FILE_UPLOAD = "fileUpload";
     private static final String START_APP = "startApp";
 
 
@@ -111,11 +118,13 @@ public class FlaNiumDriver extends RemoteWebDriver {
         }
     }
 
+    //---------------------- Root Element ------------------------------------------------------------------------------
+
     /**
      * Sets the desktop as the root element for item searches and other actions.
      * By default, the root element is the application's main window.
      */
-    public void setDesktopAsRootElement(){
+    public void setDesktopAsRootElement() {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("type", "desktop");
         this.execute(SET_ROOT_ELEMENT, parameters);
@@ -124,7 +133,7 @@ public class FlaNiumDriver extends RemoteWebDriver {
     /**
      * Sets the main window of the connected process as the root element.
      */
-    public void resetRootElement(){
+    public void resetRootElement() {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("type", "process");
         this.execute(SET_ROOT_ELEMENT, parameters);
@@ -132,23 +141,28 @@ public class FlaNiumDriver extends RemoteWebDriver {
 
     /**
      * Sets the given web element as the root element.
+     *
      * @param webElement Any web element.
      */
-    public void setRootElement(RemoteWebElement webElement){
+    public void setRootElement(RemoteWebElement webElement) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("type", "element");
         parameters.put("id", webElement.getId());
         this.execute(SET_ROOT_ELEMENT, parameters);
     }
 
+
+    //-------------------------- Process -------------------------------------------------------------------------------
+
     /**
      * Attaches to the first process found by name.
      * Changes the root element to the process's main window.
      * Also terminates the given process at the end of the session.
+     *
      * @param processName Process name.
-     * @param timeOut process search timeout in ms.
+     * @param timeOut     process search timeout in ms.
      */
-    public void changeProcess(String processName, int timeOut){
+    public void changeProcess(String processName, int timeOut) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("name", processName);
         parameters.put("timeout", timeOut);
@@ -157,20 +171,24 @@ public class FlaNiumDriver extends RemoteWebDriver {
 
     /**
      * Terminates all processes found by name.
+     *
      * @param processName Process name.
      */
-    public void killAllProcessesByName(String processName){
+    public void killAllProcessesByName(String processName) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("name", processName);
         this.execute(KILL_PROCESSES, parameters);
     }
 
+    //----------------------------- Files ------------------------------------------------------------------------------
+
     /**
      * Checks if a file or folder exists at the specified path.
+     *
      * @param path Path to folder or file. System variables are supported, for example: <br>
      *             "&lt;LOCALAPPDATA&gt;/folder/file.exe"
      */
-    public boolean fileOrDirectoryExists(String path){
+    public boolean fileOrDirectoryExists(String path) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("path", path);
         Response response = this.execute(FILE_OR_DIRECTORY_EXISTS, parameters);
@@ -180,24 +198,91 @@ public class FlaNiumDriver extends RemoteWebDriver {
     /**
      * Deletes a file or folder at the specified path. <br>
      * If an error occurs during deletion or the file or folder is missing, an exception is thrown.
+     *
      * @param path Path to folder or file. System variables are supported, for example: <br>
      *             "&lt;LOCALAPPDATA&gt;/folder/file.exe"
      */
-    public void deleteFileOrDirectory(String path){
+    public void deleteFileOrDirectory(String path) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("path", path);
         this.execute(DELETE_FILE_OR_DIRECTORY, parameters);
     }
 
     /**
+     * Download a file at the specified path. <br>
+     * If an error occurs during read the file or file is missing, an exception is thrown.
+     *
+     * @param filePath Path to file. System variables are supported, for example: <br>
+     *                 "&lt;LOCALAPPDATA&gt;/folder/file.exe"
+     */
+    public byte[] downloadFileAndGetBytes(String filePath) {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("path", filePath);
+
+        Response response = this.execute(FILE_DOWNLOAD, parameters);
+
+        Object result = response.getValue();
+
+        if (result instanceof String) {
+            return Base64.getDecoder().decode((String) result);
+        } else throw new FlaNiumDriverException(String.format("Unexpected result for %s command: %s",
+                "downloadFile", result == null ? "null" : result.getClass().getName() + " instance"));
+    }
+
+
+    /**
+     * Downloads the file from the specified path and saves it locally.
+     *
+     * @param filePath     path to the file on the host with the FlaNium driver
+     * @param filePathSave local path to save the downloaded file
+     * @return saved file
+     * @throws IOException
+     */
+    public File downloadFileAndSaveToFile(String filePath, String filePathSave) throws IOException {
+        byte[] bytes = downloadFileAndGetBytes(filePath);
+        File result = new File(filePathSave);
+        FileUtils.writeByteArrayToFile(result, bytes);
+        return result;
+    }
+
+    /**
+     * Uploads an array of bytes and saves it as a file on the host with the FlaNium driver.
+     *
+     * @param bytes          data to save to file.
+     * @param targetFilePath File path to save.
+     */
+    public void uploadFile(byte[] bytes, String targetFilePath) {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("path", targetFilePath);
+        parameters.put("bytes", Base64.getEncoder().encodeToString(bytes));
+
+        this.execute(FILE_UPLOAD, parameters);
+    }
+
+    /**
+     * Uploads data from a file to a host running the FlaNium driver and saves it as a file.
+     *
+     * @param file           file to upload and save to file.
+     * @param targetFilePath file path to save.
+     * @throws IOException
+     */
+    public void uploadFile(File file, String targetFilePath) throws IOException {
+        uploadFile(FileUtils.readFileToByteArray(file), targetFilePath);
+    }
+
+
+    //----------------------------- App --------------------------------------------------------------------------------
+
+    /**
      * Launches the application at the given path.
-     * @param appPath The absolute path to an .exe file to be started.
-     *                System variables are supported, for example: <br>
-     *                "&lt;LOCALAPPDATA&gt;/folder/file.exe"
-     * @param appArguments Startup arguments of the application. May be null.
+     *
+     * @param appPath       The absolute path to an .exe file to be started.
+     *                      System variables are supported, for example: <br>
+     *                      "&lt;LOCALAPPDATA&gt;/folder/file.exe"
+     * @param appArguments  Startup arguments of the application. May be null.
      * @param launchDelayMs Static timeout to start in ms.
      */
-    public void startApp(String appPath, String appArguments, Integer launchDelayMs){
+    public void startApp(String appPath, String appArguments, Integer launchDelayMs) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("appPath", appPath);
         if (appArguments != null) parameters.put("appArguments", appArguments);
@@ -206,6 +291,7 @@ public class FlaNiumDriver extends RemoteWebDriver {
     }
 
     // --------------------------- Actions -----------------------------------------------------------------------------
+
     /**
      * Get Touch Actions instance.
      *
