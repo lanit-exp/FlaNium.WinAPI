@@ -311,7 +311,7 @@ editTextBox.setText("Test text2");
 List<WebElement> elements = getDriver().findElements(By.xpath("#$//*"));
 ```
 
->     Если драйвер запущен с флагом --cached-strategy-default, то по умолчанию будет использоваться кэшированный поиск, а символ $ будет включать стандартный (некэшированный) поиск.
+> Если драйвер запущен с флагом --cached-strategy-default, то по умолчанию будет использоваться кэшированный поиск, а символ $ будет включать стандартный (некэшированный) поиск.
 
 ```java
 // при --cached-strategy-default
