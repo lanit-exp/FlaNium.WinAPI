@@ -122,6 +122,8 @@
         .withTimeout(Duration.ofSeconds(20))
         // Путь файла логирования драйвера
         .withLogFile(new File(LOG_PATH).getAbsoluteFile())
+        // Использовать кеширование при поиске элементов по xPath по умолчанию
+        .useCachedStrategyByDefault(true)
         .build();
 ```
 p.s.
@@ -368,6 +370,7 @@ RootElement - это элемент выступающий в качестве �
    flanium.driver.silent=false
    flanium.driver.timeout=20
    #flanium.driver.logFile=
+   flanium.driver.cachedStrategy=false
 ```
 ### flanium_app.properties
 

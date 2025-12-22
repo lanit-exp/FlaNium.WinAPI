@@ -15,7 +15,8 @@ public class PropertyList {
         DRIVER_VERBOSE ( "flanium.driver.verbose"),
         DRIVER_SILENT ( "flanium.driver.silent"),
         DRIVER_TIMEOUT ( "flanium.driver.timeout"),
-        DRIVER_LOG_FILE ( "flanium.driver.logFile");
+        DRIVER_LOG_FILE ( "flanium.driver.logFile"),
+        DRIVER_CACHED_STRATEGY ( "flanium.driver.cachedStrategy");
 
         private String value;
 
