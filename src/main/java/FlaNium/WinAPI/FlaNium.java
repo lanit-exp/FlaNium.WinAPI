@@ -73,6 +73,7 @@ public class FlaNium {
         String silent = System.getProperty(PropertyList.Driver.DRIVER_SILENT.getValue());
         String timeout = System.getProperty(PropertyList.Driver.DRIVER_TIMEOUT.getValue());
         String logFile = System.getProperty(PropertyList.Driver.DRIVER_LOG_FILE.getValue());
+        String cachedStrategy = System.getProperty(PropertyList.Driver.DRIVER_CACHED_STRATEGY.getValue());
 
         FlaNiumDriverService.Builder builder = new FlaNiumDriverService.Builder();
 
@@ -82,6 +83,7 @@ public class FlaNium {
         if (notNullAndNotEmpty(silent)) builder.withSilent(Boolean.parseBoolean(silent));
         if (notNullAndNotEmpty(timeout)) builder.withTimeout(Duration.ofSeconds(Integer.parseInt(timeout)));
         if (notNullAndNotEmpty(logFile)) builder.withLogFile(new File(logFile).getAbsoluteFile());
+        if (notNullAndNotEmpty(cachedStrategy)) builder.useCachedStrategyByDefault(Boolean.parseBoolean(cachedStrategy));
 
         return builder.build();
     }

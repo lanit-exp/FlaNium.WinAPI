@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class FlaNiumDriver extends RemoteWebDriver {
@@ -24,7 +25,11 @@ public class FlaNiumDriver extends RemoteWebDriver {
     private static final String GET_ACTIVE_WINDOW = "getActiveWindow";
     private static final String SET_ROOT_ELEMENT = "setRootElement";
     private static final String CHANGE_PROCESS = "changeProcess";
+    private static final String CHANGE_PROCESS_BY_ID = "changeProcessById";
+    private static final String GET_CURRENT_PROCESS_ID = "getCurrentProcessId";
+    private static final String GET_PROCESS_ID_BY_NAME = "getProcessIdByName";
     private static final String KILL_PROCESSES = "killProcesses";
+    private static final String KILL_PROCESS_BY_ID = "killProcessById";
     private static final String FILE_OR_DIRECTORY_EXISTS = "fileOrDirectoryExists";
     private static final String DELETE_FILE_OR_DIRECTORY = "deleteFileOrDirectory";
     private static final String FILE_DOWNLOAD = "fileDownload";
@@ -170,14 +175,60 @@ public class FlaNiumDriver extends RemoteWebDriver {
     }
 
     /**
+     * Attaches to the process found by id.
+     * @param processId Process Id.
+     */
+    public void changeProcessById(int processId) {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("id", processId);
+        this.execute(CHANGE_PROCESS_BY_ID, parameters);
+    }
+
+    /**
+     * Returns the id of all processes with the name.
+     * @param processName name of process.
+     * @return Processes id.
+     */
+    public List<Integer> getProcessIdByName(String processName) {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("name", processName);
+        Response response = this.execute(GET_PROCESS_ID_BY_NAME, parameters);
+        return (List<Integer>) response.getValue();
+    }
+
+    /**
+     * Returns the current process id.
+     * @return Process id. If the process is not attached, it returns -1.
+     */
+    public Integer getCurrentProcessId() {
+        Response response = this.execute(GET_CURRENT_PROCESS_ID);
+        return Integer.parseInt(response.getValue().toString());
+    }
+
+    /**
      * Terminates all processes found by name.
      *
      * @param processName Process name.
+     * @return the current number of killed processes with the name.
      */
-    public void killAllProcessesByName(String processName) {
+    public int killAllProcessesByName(String processName) {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("name", processName);
-        this.execute(KILL_PROCESSES, parameters);
+        Response response = this.execute(KILL_PROCESSES, parameters);
+        return Integer.parseInt(response.getValue().toString());
+    }
+
+    /**
+     * Terminates processes with id.
+     *
+     * @param id Process Id.
+     * @return true - if process successful kill or false - if process not found.
+     */
+    public boolean killProcessesById(Integer id) {
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("id", id);
+        Response response = this.execute(KILL_PROCESS_BY_ID, parameters);
+        return Boolean.parseBoolean(response.getValue().toString());
     }
 
     //----------------------------- Files ------------------------------------------------------------------------------
@@ -281,13 +332,21 @@ public class FlaNiumDriver extends RemoteWebDriver {
      *                      "&lt;LOCALAPPDATA&gt;/folder/file.exe"
      * @param appArguments  Startup arguments of the application. May be null.
      * @param launchDelayMs Static timeout to start in ms.
+     * @param startSecondInstance If the application is already running, it launches a second instance rather than attaching to the current one.
+     *
+     * @return Process Id of launched app.
      */
-    public void startApp(String appPath, String appArguments, Integer launchDelayMs) {
+    public Integer startApp(String appPath, String appArguments, Integer launchDelayMs, boolean startSecondInstance) {
         HashMap<String, Object> parameters = new HashMap<>();
+
         parameters.put("appPath", appPath);
         if (appArguments != null) parameters.put("appArguments", appArguments);
         parameters.put("launchDelay", launchDelayMs);
-        this.execute(START_APP, parameters);
+        parameters.put("startSecondInstance", startSecondInstance);
+
+        Response response = this.execute(START_APP, parameters);
+
+        return Integer.parseInt(response.getValue().toString());
     }
 
     // --------------------------- Actions -----------------------------------------------------------------------------

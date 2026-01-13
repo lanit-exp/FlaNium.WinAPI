@@ -34,6 +34,7 @@ public class FlaNiumDriverService extends DriverService {
         private boolean silent = false;
         private Duration timeout = Duration.ofSeconds(20);
         private File logFile = null;
+        private boolean cachedStrategyByDefault = false;
 
 
         @Override
@@ -113,6 +114,17 @@ public class FlaNiumDriverService extends DriverService {
         }
 
         /**
+         * Configures the driver server for use cached element strategy find by default.
+         *
+         * @param cached true use cached element strategy find by default.
+         * @return A self reference.
+         */
+        public Builder useCachedStrategyByDefault(boolean cached) {
+            this.cachedStrategyByDefault = cached;
+            return this;
+        }
+
+        /**
          * Creates a new {@link FlaNiumDriverService} to manage the FlaNium Desktop Driver server.
          * Before creating a new service, the builder will find a port for the server to listen to.
          *
@@ -146,6 +158,8 @@ public class FlaNiumDriverService extends DriverService {
             if (logFile != null) args.add(String.format("--log-path=%s", logFile.getAbsolutePath()));
 
             args.add(String.format("--port=%d", port));
+
+            if (cachedStrategyByDefault) args.add("--cached-strategy-default");
 
             return args;
         }

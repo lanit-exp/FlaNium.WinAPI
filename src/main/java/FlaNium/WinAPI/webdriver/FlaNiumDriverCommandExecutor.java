@@ -613,8 +613,20 @@ public class FlaNiumDriverCommandExecutor extends HttpCommandExecutor {
         FLANIUM_COMMAND_NAME_TO_URL.put("changeProcess",
                 new CommandInfo("/session/:sessionId/changeProcess", HttpMethod.POST));
 
+        FLANIUM_COMMAND_NAME_TO_URL.put("changeProcessById",
+                new CommandInfo("/session/:sessionId/changeProcessById", HttpMethod.POST));
+
+        FLANIUM_COMMAND_NAME_TO_URL.put("getProcessIdByName",
+                new CommandInfo("/session/:sessionId/getProcessIdByName", HttpMethod.POST));
+
+        FLANIUM_COMMAND_NAME_TO_URL.put("getCurrentProcessId",
+                new CommandInfo("/session/:sessionId/getCurrentProcessId", HttpMethod.POST));
+
         FLANIUM_COMMAND_NAME_TO_URL.put("killProcesses",
                 new CommandInfo("/session/:sessionId/killProcesses", HttpMethod.POST));
+
+        FLANIUM_COMMAND_NAME_TO_URL.put("killProcessById",
+                new CommandInfo("/session/:sessionId/killProcessById", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("fileOrDirectoryExists",
                 new CommandInfo("/session/:sessionId/fileOrDirectoryExists", HttpMethod.POST));
