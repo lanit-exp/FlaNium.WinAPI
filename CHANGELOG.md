@@ -1,6 +1,6 @@
 ## Changelog
 
-### 2.5.0 (2025-12-22)
+### 2.5.0 (2026-01-14)
 
   - Added cached-strategy-default start driver option.
   - Added changeProcessById, getProcessIdByName, getCurrentProcessId, killProcessesById methods in FlaNiumDriver class.
