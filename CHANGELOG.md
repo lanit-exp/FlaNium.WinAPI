@@ -1,5 +1,10 @@
 ## Changelog
 
+### 2.6.0 (2026-05-13)
+
+- Removed duplication of some parameters in API request paths to ensure correct operation through proxy services.
+
+
 ### 2.5.0 (2026-01-14)
 
   - Added cached-strategy-default start driver option.
