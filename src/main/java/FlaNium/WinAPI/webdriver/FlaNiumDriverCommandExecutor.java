@@ -37,13 +37,13 @@ public class FlaNiumDriverCommandExecutor extends HttpCommandExecutor {
                 new CommandInfo("/session/:sessionId/element/:id/combobox/expand", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("comboBoxSelect",
-                new CommandInfo("/session/:sessionId/element/:id/combobox/select/:value", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/combobox/select", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("comboBoxSelectIndex",
-                new CommandInfo("/session/:sessionId/element/:id/combobox/selectIndex/:value", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/combobox/selectIndex", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("comboBoxSetEditableText",
-                new CommandInfo("/session/:sessionId/element/:id/combobox/setEditableText/:value", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/combobox/setEditableText", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("comboBoxIsEditable",
                 new CommandInfo("/session/:sessionId/element/:id/combobox/isEditable", HttpMethod.POST));
@@ -104,7 +104,7 @@ public class FlaNiumDriverCommandExecutor extends HttpCommandExecutor {
                 new CommandInfo("/session/:sessionId/element/:id/slider/getValue", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("sliderSetValue",
-                new CommandInfo("/session/:sessionId/element/:id/slider/setValue/:value", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/slider/setValue", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("sliderSmallIncrement",
                 new CommandInfo("/session/:sessionId/element/:id/slider/smallIncrement", HttpMethod.POST));
@@ -145,7 +145,7 @@ public class FlaNiumDriverCommandExecutor extends HttpCommandExecutor {
                 new CommandInfo("/session/:sessionId/element/:id/dataGridViewCell/getValue", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("dataGridViewCellSetValue",
-                new CommandInfo("/session/:sessionId/element/:id/dataGridViewCell/setValue/:value", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/dataGridViewCell/setValue", HttpMethod.POST));
         //endregion
 
         //region Grid
@@ -177,31 +177,31 @@ public class FlaNiumDriverCommandExecutor extends HttpCommandExecutor {
                 new CommandInfo("/session/:sessionId/element/:id/grid/selectedItem", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("gridSelect",
-                new CommandInfo("/session/:sessionId/element/:id/grid/select/:index", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/grid/select", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("gridSelectText",
-                new CommandInfo("/session/:sessionId/element/:id/grid/selectText/:index/:text", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/grid/selectText", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("gridAddToSelection",
-                new CommandInfo("/session/:sessionId/element/:id/grid/addToSelection/:index", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/grid/addToSelection", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("gridAddToSelectionText",
-                new CommandInfo("/session/:sessionId/element/:id/grid/addToSelectionText/:index/:text", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/grid/addToSelectionText", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("gridRemoveFromSelection",
-                new CommandInfo("/session/:sessionId/element/:id/grid/removeFromSelection/:index", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/grid/removeFromSelection", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("gridRemoveFromSelectionText",
-                new CommandInfo("/session/:sessionId/element/:id/grid/removeFromSelectionText/:index/:text", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/grid/removeFromSelectionText", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("gridGetRowByIndex",
-                new CommandInfo("/session/:sessionId/element/:id/grid/getRowByIndex/:index", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/grid/getRowByIndex", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("gridGetRowByValue",
-                new CommandInfo("/session/:sessionId/element/:id/grid/getRowByValue/:index/:text", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/grid/getRowByValue", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("gridGetRowsByValue",
-                new CommandInfo("/session/:sessionId/element/:id/grid/getRowsByValue/:index/:text/:count", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/grid/getRowsByValue", HttpMethod.POST));
         //endregion
 
         //region GridCell
@@ -225,7 +225,7 @@ public class FlaNiumDriverCommandExecutor extends HttpCommandExecutor {
                 new CommandInfo("/session/:sessionId/element/:id/gridRow/header", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("gridRowFindCellByText",
-                new CommandInfo("/session/:sessionId/element/:id/gridRow/findCellByText/:value", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/gridRow/findCellByText", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("gridRowScrollIntoView",
                 new CommandInfo("/session/:sessionId/element/:id/gridRow/scrollIntoView", HttpMethod.POST));
@@ -301,22 +301,22 @@ public class FlaNiumDriverCommandExecutor extends HttpCommandExecutor {
                 new CommandInfo("/session/:sessionId/element/:id/listBox/selectedItem", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("listBoxSelectIndex",
-                new CommandInfo("/session/:sessionId/element/:id/listBox/selectIndex/:index", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/listBox/selectIndex", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("listBoxSelectText",
-                new CommandInfo("/session/:sessionId/element/:id/listBox/selectText/:value", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/listBox/selectText", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("listBoxAddToSelectionIndex",
-                new CommandInfo("/session/:sessionId/element/:id/listBox/addToSelectionIndex/:index", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/listBox/addToSelectionIndex", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("listBoxAddToSelectionText",
-                new CommandInfo("/session/:sessionId/element/:id/listBox/addToSelectionText/:value", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/listBox/addToSelectionText", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("listBoxRemoveFromSelectionIndex",
-                new CommandInfo("/session/:sessionId/element/:id/listBox/removeFromSelectionIndex/:index", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/listBox/removeFromSelectionIndex", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("listBoxRemoveFromSelectionText",
-                new CommandInfo("/session/:sessionId/element/:id/listBox/removeFromSelectionText/:value", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/listBox/removeFromSelectionText", HttpMethod.POST));
         //endregion
 
         //region ListBoxItem
@@ -327,7 +327,7 @@ public class FlaNiumDriverCommandExecutor extends HttpCommandExecutor {
                 new CommandInfo("/session/:sessionId/element/:id/listBoxItem/isChecked", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("listBoxItemSetChecked",
-                new CommandInfo("/session/:sessionId/element/:id/listBoxItem/setChecked/:value", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/listBoxItem/setChecked", HttpMethod.POST));
         //endregion
 
         //region Menu
@@ -374,7 +374,7 @@ public class FlaNiumDriverCommandExecutor extends HttpCommandExecutor {
                 new CommandInfo("/session/:sessionId/element/:id/spinner/getValue", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("spinnerSetValue",
-                new CommandInfo("/session/:sessionId/element/:id/spinner/setValue/:value", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/spinner/setValue", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("spinnerIncrement",
                 new CommandInfo("/session/:sessionId/element/:id/spinner/increment", HttpMethod.POST));
@@ -394,10 +394,10 @@ public class FlaNiumDriverCommandExecutor extends HttpCommandExecutor {
                 new CommandInfo("/session/:sessionId/element/:id/tab/tabItems", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("tabSelectTabItemIndex",
-                new CommandInfo("/session/:sessionId/element/:id/tab/selectTabItemIndex/:index", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/tab/selectTabItemIndex", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("tabSelectTabItemText",
-                new CommandInfo("/session/:sessionId/element/:id/tab/selectTabItemText/:value", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/tab/selectTabItemText", HttpMethod.POST));
         //endregion
 
         //region TabItem
@@ -416,21 +416,21 @@ public class FlaNiumDriverCommandExecutor extends HttpCommandExecutor {
                 new CommandInfo("/session/:sessionId/element/:id/textBox/getText", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("textBoxSetText",
-                new CommandInfo("/session/:sessionId/element/:id/textBox/setText/:value", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/textBox/setText", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("textBoxIsReadOnly",
                 new CommandInfo("/session/:sessionId/element/:id/textBox/isReadOnly", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("textBoxEnter",
-                new CommandInfo("/session/:sessionId/element/:id/textBox/enter/:value", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/textBox/enter", HttpMethod.POST));
         //endregion
 
         //region Thumb
         FLANIUM_COMMAND_NAME_TO_URL.put("thumbSlideHorizontally",
-                new CommandInfo("/session/:sessionId/element/:id/thumb/slideHorizontally/:index", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/thumb/slideHorizontally", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("thumbSlideVertically",
-                new CommandInfo("/session/:sessionId/element/:id/thumb/slideVertically/:index", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/thumb/slideVertically", HttpMethod.POST));
         //endregion
 
         //region TitleBar
@@ -455,7 +455,7 @@ public class FlaNiumDriverCommandExecutor extends HttpCommandExecutor {
                 new CommandInfo("/session/:sessionId/element/:id/toggleButton/getToggleState", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("toggleButtonSetToggleState",
-                new CommandInfo("/session/:sessionId/element/:id/toggleButton/setToggleState/:value", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/toggleButton/setToggleState", HttpMethod.POST));
         //endregion
 
         //region Tree
@@ -495,7 +495,7 @@ public class FlaNiumDriverCommandExecutor extends HttpCommandExecutor {
                 new CommandInfo("/session/:sessionId/element/:id/treeItem/isChecked", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("treeItemSetChecked",
-                new CommandInfo("/session/:sessionId/element/:id/treeItem/setChecked/:value", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/treeItem/setChecked", HttpMethod.POST));
         //endregion
 
         //region Window
@@ -521,10 +521,10 @@ public class FlaNiumDriverCommandExecutor extends HttpCommandExecutor {
                 new CommandInfo("/session/:sessionId/element/:id/window/close", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("windowMove",
-                new CommandInfo("/session/:sessionId/element/:id/window/move/:x/:y", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/window/move", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("windowSetTransparency",
-                new CommandInfo("/session/:sessionId/element/:id/window/setTransparency/:index", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/window/setTransparency", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("windowGetActiveWindow",
                 new CommandInfo("/session/:sessionId/element/:id/window/getActiveWindow", HttpMethod.POST));
@@ -535,10 +535,10 @@ public class FlaNiumDriverCommandExecutor extends HttpCommandExecutor {
                 new CommandInfo("/session/:sessionId/element/:id/calendar/selectedDates", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("calendarSelectDate",
-                new CommandInfo("/session/:sessionId/element/:id/calendar/selectDate/:dateTime", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/calendar/selectDate", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("calendarAddToSelection",
-                new CommandInfo("/session/:sessionId/element/:id/calendar/addToSelection/:dateTime", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/calendar/addToSelection", HttpMethod.POST));
         //endregion
 
         //region DateTimePicker
@@ -546,12 +546,12 @@ public class FlaNiumDriverCommandExecutor extends HttpCommandExecutor {
                 new CommandInfo("/session/:sessionId/element/:id/dateTimePicker/getDate", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("dateTimePickerSetDate",
-                new CommandInfo("/session/:sessionId/element/:id/dateTimePicker/setDate/:dateTime", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/element/:id/dateTimePicker/setDate", HttpMethod.POST));
         //endregion
 
         //region Other
         FLANIUM_COMMAND_NAME_TO_URL.put("customScreenshot",
-                new CommandInfo("/session/:sessionId/customScreenshot/:format", HttpMethod.POST));
+                new CommandInfo("/session/:sessionId/customScreenshot", HttpMethod.POST));
 
         FLANIUM_COMMAND_NAME_TO_URL.put("elementScreenshot",
                 new CommandInfo("/session/:sessionId/element/:id/elementScreenshot", HttpMethod.POST));
